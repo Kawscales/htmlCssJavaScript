@@ -1,50 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Local Businesses Directory</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Businesses Directory</title>
 </head>
 <body>
 
+    <!-- Header Navigation (Targets Section IDs) -->
+    <header id="top">
+        <h1>Local Businesses Directory</h1>
+        <nav>
+            <a href="#featured">Featured</a>
+            <a href="#services">Services</a>
+            <a href="#events">Events</a>
+            <a href="#page-nav">Jump Menu</a>
+        </nav>
+    </header>
 
-   <header id="top">
-      <h1>Local Businesses Directory</h1>
-      <nav>
-         <a href="home">Home</a>
-         <a href="featured">Featured</a>
-         <a href="services">Services</a>
-         <a href="contact">Contact</a>
-      </nav>
-   </header>
+    <!-- Main Content Area (Everything wraps inside ONE main tag) -->
+    <main>
+        
+        <section id="featured">
+            <h2>Featured Businesses</h2>
+            <p>Supporting local businesses keeps the community thriving. While current economic changes bring higher costs and tax challenges, local commerce keeps revenue circulating within our city.</p>
+        </section>
 
-   <main>
-      
-   </main>
+        <section id="services">
+            <h2>Services Directory</h2>
+            <p>Our service categories are divided into three main provider categories: Professional Services, Software Services, and Hospitality.</p>
+        </section>
 
-   <footer>
-      <p>&copy; 2026 Local Businesses Directory. All rights reserved.</p>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-   </footer>
+        <section id="events">
+            <h2>Community Events</h2>
+            <p>Upcoming community events include the Ethics Board Meeting, City Council Meeting, and Mayor's Court.</p>
+        </section>
 
-   <main> 
-      <section id="featured">
-         <h2>Featured Businesses</h2>
-         <p>The economy. The economy bad right now poeple want to make Local Businesses the economic will get more worst because they're make more money and the taxs getting more higher and higher.</p>
-      </section>
-   </main>
+        <!-- Fixed typo from <mian> to <main> context elements -->
+        <nav id="page-nav">
+            <p><strong>Jump to:</strong></p>
+            <ul>
+                <li><a href="#featured">Featured Destinations</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#top">Back to Top</a></li>
+            </ul>
+        </nav>
 
-   <section id="services">
-      <h2>Services Directory</h2>
-      <p>Sevices Categories are has three main provider categories the Professional Services, Software Services, and Hospitality.</p>
-   </section>
+    </main>
 
-<section id="events">
-   <h2>Community Events</h2>
-   <p> The community events the </p>
-</section>
-         
+    <!-- Footer belongs at the absolute bottom -->
+    <footer>
+        <p>&copy; 2026 Local Businesses Directory. All rights reserved.</p>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </footer>
+
+</body>
+</html>
