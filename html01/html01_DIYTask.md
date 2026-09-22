@@ -1,12 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UFT-8">
-   <tilte>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+</head>
 
+<body>
+    <h1>Landon</h1>
 
+    <h2>About Me</h2>
+    <p>
+        I'm passionate about basketball; it was the first sport I ever played.
+        I also enjoy watching the NBA, and my favorite team is the Phoenix Suns.
+        My favorite player is Devin Booker, and I like to watch his highlights.
+        I have a lot of jerseys, and I like to play basketball in the driveway,
+        just shooting some hoops.
+    </p>
 
+    <h2>My Interests</h2>
 
+    <h3>Technology</h3>
+    <p>
+        Technology interests me because of how much you can do with it. For example,
+        you can build a PC by choosing the parts yourself. Technology can also create
+        things like AI, which can help people build successful businesses.
+    </p>
 
-   </head>
-   <body>
+    <h2>Education &amp; Goals</h2>
+    <p>
+        I'm not sure what I want to study yet, and I do not currently plan to go to
+        college. However, I want to accomplish my goals, have my dream cars and place
+        to live, and get my dream job.
+    </p>
+
+    <h2>Fun Facts</h2>
+    <p>Fun fact: I have a christmas tree in my room and I don't have any ornaments on it, and I don't put the tree light on.</p>
+</body>
+</html>
