@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aura RNG Simulator - Expanded Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #03050b;
+      --panel: rgba(13, 17, 30, 0.75);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --panel-glow: rgba(56, 189, 248, 0.15);
+      --accent-cyan: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-gold: #facc15;
+      --accent-green: #34d399;
+      --accent-red: #f87171;
+      --accent-admin: #ec4899;
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: #f1f5f9;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: 0;
+      pointer-events: none;
+      animation: float 18s infinite alternate ease-in-out;
+      transition: opacity 0.3s ease;
+    }
+    .orb-1 { width: 500px; height: 500px; background: rgba(56, 189, 248, 0.15); top: -100px; left: -100px; }
+    .orb-2 { width: 600px; height: 600px; background: rgba(168, 85, 247, 0.12); bottom: -150px; right: -150px; animation-delay: -5s; }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(40px, -30px) scale(1.1); }
+      100% { transform: translate(-30px, 50px) scale(0.95); }
+    }
+
+    .app-container {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+      max-width: 1250px;
+      width: 100%;
+    }
+
+    @media (max-width: 960px) {
+      .app-container { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--panel);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--panel-border);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+    .title {
+      font-size: 1.5rem; font-weight: 900;
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions { display: flex; gap: 8px; align-items: center; }
+
+    .btn-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--panel-border);
+      color: #cbd5e1; padding: 8px 14px; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+    }
+    .btn-pill:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+    .btn-admin-nav {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(168, 85, 247, 0.2));
+      border: 1px solid rgba(236, 72, 153, 0.4); color: #f472b6;
+    }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 12px; border-radius: 16px; text-align: center;
+    }
+    .stat-card .label { font-size: 0.65rem; color: #64748b; font-weight: 700; text-transform: uppercase; }
+    .stat-card .value { font-size: 1.15rem; font-weight: 900; margin-top: 4px; color: #f8fafc; }
+
+    .potion-banner {
+      background: linear-gradient(135deg, rgba(250, 204, 21, 0.15), rgba(245, 158, 11, 0.15));
+      border: 1px solid rgba(250, 204, 21, 0.4);
+      color: var(--accent-gold); padding: 8px 14px; border-radius: 12px;
+      font-size: 0.8rem; font-weight: 800; display: none; text-align: center; margin-bottom: 16px;
+    }
+
+    .roll-stage {
+      position: relative; height: 240px; border-radius: 24px;
+      border: 1px solid var(--panel-border);
+      background: radial-gradient(circle at center, rgba(30, 41, 59, 0.4) 0%, rgba(8, 12, 24, 0.9) 100%);
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      margin-bottom: 20px; overflow: hidden; transition: all 0.4s ease;
+    }
+
+    #particleCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+    .aura-display { z-index: 2; text-align: center; }
+    .aura-badge {
+      font-size: 0.75rem; font-weight: 900; text-transform: uppercase;
+      padding: 4px 14px; border-radius: 20px; background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1); display: inline-block; margin-bottom: 10px;
+    }
+    .aura-title { font-size: 2.5rem; font-weight: 900; text-shadow: 0 0 30px currentColor; }
+    .aura-odds { font-size: 0.8rem; color: #94a3b8; margin-top: 6px; font-weight: 600; }
+
+    .controls { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 20px; }
+    button {
+      font-family: inherit; border: none; border-radius: 16px; font-weight: 800;
+      font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease; padding: 16px;
+    }
+    .btn-roll { background: linear-gradient(135deg, #38bdf8, #2563eb); color: white; }
+    .btn-auto { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--panel-border); color: #f8fafc; }
+    .btn-auto.active { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .btn-auto.locked { opacity: 0.4; cursor: not-allowed; background: rgba(255, 255, 255, 0.02); }
+
+    .tab-bar { display: flex; gap: 8px; margin-bottom: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 8px; }
+    .tab-btn {
+      background: transparent; color: #64748b; padding: 8px 12px; border-radius: 10px;
+      font-size: 0.8rem; font-weight: 800; border: none; cursor: pointer;
+    }
+    .tab-btn.active { background: rgba(255, 255, 255, 0.08); color: #fff; }
+
+    .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; max-height: 220px; overflow-y: auto; }
+    .inv-card {
+      background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .inv-name { font-size: 0.8rem; font-weight: 800; }
+    .inv-meta { display: flex; justify-content: space-between; font-size: 0.7rem; color: #64748b; margin-top: 6px; }
+    .btn-card-action {
+      border: none; font-size: 0.68rem; padding: 5px; margin-top: 6px; border-radius: 8px; cursor: pointer; font-weight: 800; width: 100%;
+    }
+    .btn-sell { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+    .btn-fuse { background: rgba(192, 132, 252, 0.15); color: var(--accent-purple); margin-top: 4px; }
+
+    .shop-list, .achieve-list { display: flex; flex-direction: column; gap: 10px; max-height: 520px; overflow-y: auto; }
+    .shop-card, .achieve-card {
+      background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .shop-info h4, .achieve-info h4 { margin: 0; font-size: 0.88rem; font-weight: 800; }
+    .shop-info p, .achieve-info p { margin: 2px 0 0 0; font-size: 0.72rem; color: #64748b; }
+
+    .btn-buy, .btn-claim {
+      background: linear-gradient(135deg, #10b981, #059669); color: white;
+      padding: 8px 14px; font-size: 0.75rem; border-radius: 12px; border: none; font-weight: 800; min-width: 90px;
+    }
+    .btn-buy:disabled, .btn-claim:disabled { background: rgba(255, 255, 255, 0.05); color: #475569; }
+
+    .announcement-banner {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, #facc15, #ef4444); color: #000;
+      padding: 12px 28px; border-radius: 30px; font-weight: 900; font-size: 1rem;
+      box-shadow: 0 0 30px rgba(250, 204, 21, 0.8); z-index: 200; display: none;
+      animation: popBanner 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popBanner { 0% { transform: translate(-50%, -40px) scale(0.8); opacity: 0; } 100% { transform: translate(-50%, 0) scale(1); opacity: 1; } }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(3, 5, 11, 0.8); backdrop-filter: blur(12px);
+      z-index: 100; display: flex; justify-content: center; align-items: center; padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+    }
+    .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+    .modal { background: #0d111e; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 24px; width: 100%; max-width: 480px; padding: 24px; }
+
+    .setting-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.88rem; font-weight: 700; color: #cbd5e1;
+    }
+
+    .toggle-switch { position: relative; width: 44px; height: 24px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; inset: 0;
+      background-color: rgba(255, 255, 255, 0.1); border-radius: 24px; transition: .2s;
+    }
+    .slider:before {
+      position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+      background-color: #fff; border-radius: 50%; transition: .2s;
+    }
+    input:checked + .slider { background-color: var(--accent-cyan); }
+    input:checked + .slider:before { transform: translateX(20px); }
+
+    .admin-input {
+      width: 100%; padding: 10px 14px; border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(236, 72, 153, 0.4);
+      color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; margin-bottom: 8px;
+    }
+    .admin-input:focus { border-color: #ec4899; }
+    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .admin-btn { padding: 10px; font-size: 0.75rem; border-radius: 12px; font-weight: 800; cursor: pointer; border: none; }
+    .admin-btn-pink { background: linear-gradient(135deg, #ec4899, #be185d); color: white; }
+    .admin-btn-purple { background: linear-gradient(135deg, #a855f7, #7e22ce); color: white; }
+    .admin-btn-red { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #f87171; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-orb orb-1" id="orb1"></div>
+  <div class="bg-orb orb-2" id="orb2"></div>
+  <div class="announcement-banner" id="announceBanner">🎉 MYTHIC DROP!</div>
+
+  <div class="app-container">
+    <div class="panel">
+      <div class="header">
+        <div class="brand">
+          <div class="brand-icon">✨</div>
+          <div class="title">AURA RNG</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-pill btn-admin-nav" onclick="openAdmin()">👑 Admin</button>
+          <button class="btn-pill" onclick="openSettings()">⚙️ Settings</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="label">Rolls</div><div class="value" id="statRolls">0</div></div>
+        <div class="stat-card"><div class="label">Coins</div><div class="value" id="statCoins" style="color: var(--accent-gold);">0</div></div>
+        <div class="stat-card"><div class="label">Luck Multi</div><div class="value" id="statLuck" style="color: var(--accent-cyan);">1.0x</div></div>
+        <div class="stat-card"><div class="label">Pity Gauge</div><div class="value" id="statPity" style="color: var(--accent-purple);">0/50</div></div>
+      </div>
+
+      <div class="potion-banner" id="potionBanner">🧪 2x Luck Potion Active (<span id="potionTime">60</span>s)</div>
+
+      <div class="roll-stage" id="rollStage">
+        <canvas id="particleCanvas"></canvas>
+        <div class="aura-display">
+          <div class="aura-badge" id="auraBadge">READY</div>
+          <div class="aura-title" id="auraTitle" style="color: #64748b;">Press Roll</div>
+          <div class="aura-odds" id="auraOdds">Click below to test your fortune</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn-roll" onclick="manualRoll()">🎲 ROLL AURA</button>
+        <button class="btn-auto locked" id="autoBtn" onclick="toggleAutoRoll()">🔒 AUTO</button>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('inventory')">🎒 Collection</button>
+        <button class="tab-btn" onclick="switchTab('alchemy')">🔮 Alchemy Fusion</button>
+      </div>
+
+      <div id="tabInventory" class="inventory-grid"></div>
+      <div id="tabAlchemy" class="inventory-grid" style="display: none;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="tab-bar">
+        <button class="tab-btn active" id="btnShopTab" onclick="switchRightTab('shop')">⚡ Upgrades & Boosts</button>
+        <button class="tab-btn" id="btnAchieveTab" onclick="switchRightTab('achieve')">🏆 Achievements</button>
+      </div>
+
+      <div id="rightShop" class="shop-list"></div>
+      <div id="rightAchieve" class="achieve-list" style="display: none;"></div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal">
+      <h3 style="margin: 0 0 16px 0; color: var(--accent-cyan); display:flex; justify-content:space-between; align-items:center;">
+        <span>⚙️ Game Settings</span>
+      </h3>
+
+      <div class="setting-row">
+        <span>🔊 Sound Effects (SFX)</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="setSfx" checked onchange="updateSettings()">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-row">
+        <span>✨ Visual FX & Animations</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="setVisuals" checked onchange="updateSettings()">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-row">
+        <span>🛡️ Confirm Selling Rare+ Auras</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="setConfirmSell" checked onchange="updateSettings()">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div style="margin-top:20px; border-top: 1px solid rgba(255,255,255,0.08); padding-top:16px;">
+        <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:8px;">💾 SAVE DATA MANAGEMENT</label>
+        <div class="admin-grid">
+          <button class="admin-btn admin-btn-purple" onclick="exportSaveData()">💾 Export Save</button>
+          <button class="admin-btn admin-btn-pink" onclick="importSaveData()">📥 Import Save</button>
+        </div>
+      </div>
+
+      <button onclick="closeSettings()" style="width:100%; margin-top:20px; background:rgba(255,255,255,0.05); color:#cbd5e1; border-radius:12px; padding:10px; font-weight:800; border:none; cursor:pointer;">CLOSE</button>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div class="modal-backdrop" id="adminModal">
+    <div class="modal">
+      <h3 style="margin: 0 0 16px 0; color: var(--accent-admin); display:flex; justify-content:space-between; align-items:center;">
+        <span>👑 Developer Admin Panel</span>
+        <span id="adminAuthBadge" style="font-size:0.7rem; color:#64748b;">[LOCKED]</span>
+      </h3>
+
+      <div id="adminAuthBox">
+        <input type="password" id="adminPasscodeInput" class="admin-input" placeholder="Enter Admin Passcode..." />
+        <button onclick="verifyAdminPasscode()" class="admin-btn admin-btn-pink" style="width:100%; margin-top:4px;">VERIFY ACCESS</button>
+      </div>
+
+      <div id="adminControls" style="display:none; flex-direction:column; gap:12px; max-height:420px; overflow-y:auto; padding-right:4px;">
+        <div class="admin-grid">
+          <button class="admin-btn admin-btn-purple" onclick="adminAddCoins(100000)">+100K Coins</button>
+          <button class="admin-btn admin-btn-purple" onclick="adminAddCoins(1000000)">+1M Coins</button>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <input type="number" id="customCoinAmt" class="admin-input" placeholder="Custom Coins..." style="margin:0;" />
+          <button class="admin-btn admin-btn-pink" onclick="adminAddCustomCoins()" style="white-space:nowrap;">ADD COINS</button>
+        </div>
+
+        <div class="admin-grid">
+          <button class="admin-btn admin-btn-pink" onclick="adminSetLuck(100)">100x Luck</button>
+          <button class="admin-btn admin-btn-pink" onclick="adminSetLuck(99999)">🍀 GOD LUCK (99k x)</button>
+        </div>
+
+        <div class="admin-grid">
+          <button class="admin-btn admin-btn-purple" onclick="adminMaxUpgrades()">⚡ Max All Upgrades</button>
+          <button class="admin-btn admin-btn-purple" onclick="adminFillPity()">🎯 Instant Max Pity</button>
+        </div>
+
+        <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top:10px;">
+          <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; display:block; margin-bottom:6px;">✨ SPAWN SPECIFIC AURA</label>
+          <div style="display:flex; gap:8px;">
+            <select id="adminAuraSelect" class="admin-input" style="margin:0; background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.1);"></select>
+            <button class="admin-btn admin-btn-pink" onclick="adminSpawnAura()" style="white-space:nowrap;">GIVE AURA</button>
+          </div>
+        </div>
+
+        <button class="admin-btn admin-btn-red" onclick="adminResetData()" style="margin-top:6px;">⚠️ RESET ALL GAME DATA</button>
+      </div>
+
+      <button onclick="closeAdmin()" style="width:100%; margin-top:16px; background:rgba(255,255,255,0.05); color:#cbd5e1; border-radius:12px; padding:10px; font-weight:800; border:none; cursor:pointer;">CLOSE</button>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_HASH = "S2F3cw==";
+    let rolls = 0, coins = 0, pityCount = 0, autoRolling = false, autoTimeout = null;
+    let potionTimer = 0, potionInterval = null, adminLuckBonus = 0;
+    let inventory = {};
+
+    let gameSettings = {
+      sfx: true,
+      visuals: true,
+      confirmRareSell: true
+    };
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playAudioTone(type) {
+      if (!gameSettings.sfx) return;
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'roll') {
+          osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+          osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+        } else if (type === 'rare') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+          osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+          osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+          osc.start(); osc.stop(audioCtx.currentTime + 0.35);
+        }
+      } catch (e) {}
+    }
+
+    const AURAS = [
+      { name: "OMNIPOTENT", chance: 100000000, color: "#38bdf8", value: 500000, rarityVal: 12 },
+      { name: "SINGULARITY", chance: 25000000, color: "#e879f9", value: 125000, rarityVal: 11 },
+      { name: "CHRONO", chance: 5000000, color: "#22d3ee", value: 30000, rarityVal: 10 },
+      { name: "GODLY", chance: 1000000, color: "#ef4444", value: 7500, rarityVal: 9 },
+      { name: "ECLIPSE", chance: 500000, color: "#f43f5e", value: 3500, rarityVal: 8 },
+      { name: "DIVINE", chance: 250000, color: "#facc15", value: 1800, rarityVal: 7 },
+      { name: "ARCHON", chance: 100000, color: "#fb923c", value: 850, rarityVal: 6 },
+      { name: "CELESTIAL", chance: 50000, color: "#c084fc", value: 450, rarityVal: 5 },
+      { name: "RADIANT", chance: 20000, color: "#fef08a", value: 250, rarityVal: 4 },
+      { name: "MYTHIC", chance: 10000, color: "#e11d48", value: 150, rarityVal: 4 },
+      { name: "PHANTOM", chance: 5000, color: "#818cf8", value: 80, rarityVal: 3 },
+      { name: "LEGENDARY", chance: 2500, color: "#fbbf24", value: 50, rarityVal: 3 },
+      { name: "ARCANE", chance: 1000, color: "#06b6d4", value: 25, rarityVal: 2 },
+      { name: "EPIC", chance: 500, color: "#a855f7", value: 15, rarityVal: 2 },
+      { name: "RARE", chance: 100, color: "#60a5fa", value: 8, rarityVal: 1 },
+      { name: "UNCOMMON", chance: 20, color: "#34d399", value: 4, rarityVal: 1 },
+      { name: "COMMON", chance: 4, color: "#94a3b8", value: 2, rarityVal: 0 },
+      { name: "DUST", chance: 2, color: "#64748b", value: 1, rarityVal: 0 }
+    ];
+
+    const UPGRADES = [
+      { id: "unlock_auto", name: "⚡ Unlock Auto Roll", desc: "Unlocks the ability to automatically roll", special: "unlock_auto", baseCost: 150, maxLevel: 1, level: 0 },
+      { id: "clover", name: "🍀 Lucky Clover", desc: "+0.5 Base Luck", addLuck: 0.5, baseCost: 25, multCost: 1.4, level: 0 },
+      { id: "amulet", name: "🧿 Star Amulet", desc: "+2.0 Base Luck", addLuck: 2.0, baseCost: 150, multCost: 1.5, level: 0 },
+      { id: "coin_magnet", name: "🧲 Coin Magnet", desc: "+3 extra Coins per roll", bonusCoins: 3, baseCost: 80, multCost: 1.6, level: 0 },
+      { id: "pity_focus", name: "🎯 Pity Catalyst", desc: "-3 rolls required for Pity threshold", reducePity: 3, maxLevel: 10, baseCost: 300, multCost: 2.0, level: 0 },
+      { id: "double_roll", name: "🎲 Double Strike", desc: "+5% chance for a free instant second roll", doubleChance: 0.05, maxLevel: 6, baseCost: 500, multCost: 2.5, level: 0 },
+      { id: "auto_speed", name: "🚀 Auto Speed Boost", desc: "Faster auto-rolling interval", special: "auto_speed", baseCost: 350, multCost: 2.2, maxLevel: 5, level: 0 },
+      { id: "auto_sell", name: "🗑️ Auto-Sell Low Tiers", desc: "Auto-sells Dust & Common drops during Auto Roll", special: "auto_sell", baseCost: 400, maxLevel: 1, level: 0 },
+      { id: "potion_buy", name: "🧪 2x Luck Potion (1m)", desc: "Double Luck for 60 seconds", special: "potion", baseCost: 200, level: 0 },
+      { id: "galaxy_core", name: "🌌 Galaxy Core", desc: "+10.0 Base Luck (Endgame Item)", addLuck: 10.0, baseCost: 5000, multCost: 2.2, level: 0 }
+    ];
+
+    // EXPANDED ACHIEVEMENTS LIST
+    const ACHIEVEMENTS = [
+      // Roll Milestones
+      { id: "roll10", name: "Beginner Roller", desc: "Roll 10 times", req: () => rolls >= 10, reward: 100, claimed: false },
+      { id: "roll50", name: "Rookie Roller", desc: "Roll 50 times", req: () => rolls >= 50, reward: 250, claimed: false },
+      { id: "roll100", name: "Aura Novice", desc: "Roll 100 times", req: () => rolls >= 100, reward: 500, claimed: false },
+      { id: "roll500", name: "Aura Apprentice", desc: "Roll 500 times", req: () => rolls >= 500, reward: 2000, claimed: false },
+      { id: "roll1000", name: "Roll Master", desc: "Roll 1,000 times", req: () => rolls >= 1000, reward: 5000, claimed: false },
+      { id: "roll5000", name: "RNG Addict", desc: "Roll 5,000 times", req: () => rolls >= 5000, reward: 25000, claimed: false },
+
+      // Coin Milestones
+      { id: "coin250", name: "Pocket Change", desc: "Accumulate 250 Coins", req: () => coins >= 250, reward: 150, claimed: false },
+      { id: "coin1000", name: "Wealthy", desc: "Accumulate 1,000 Coins", req: () => coins >= 1000, reward: 1000, claimed: false },
+      { id: "coin10000", name: "Tycoon", desc: "Accumulate 10,000 Coins", req: () => coins >= 10000, reward: 5000, claimed: false },
+      { id: "coin100000", name: "High Roller", desc: "Accumulate 100,000 Coins", req: () => coins >= 100000, reward: 25000, claimed: false },
+      { id: "coin1000000", name: "Aura Millionaire", desc: "Accumulate 1,000,000 Coins", req: () => coins >= 1000000, reward: 250000, claimed: false },
+
+      // Luck Multiplier Milestones
+      { id: "luck5", name: "Feeling Lucky", desc: "Reach 5.0x Luck Multiplier", req: () => getTotalLuck() >= 5, reward: 500, claimed: false },
+      { id: "luck15", name: "Blessed by Fortune", desc: "Reach 15.0x Luck Multiplier", req: () => getTotalLuck() >= 15, reward: 2500, claimed: false },
+      { id: "luck50", name: "Overcharged", desc: "Reach 50.0x Luck Multiplier", req: () => getTotalLuck() >= 50, reward: 10000, claimed: false },
+
+      // Rarity & Collection Drops
+      { id: "has_rare", name: "Rare Discovery", desc: "Obtain a RARE Aura in your collection", req: () => (inventory["RARE"] || 0) > 0, reward: 300, claimed: false },
+      { id: "has_arcane", name: "Arcane Collector", desc: "Obtain an ARCANE Aura in your collection", req: () => (inventory["ARCANE"] || 0) > 0, reward: 800, claimed: false },
+      { id: "has_legendary", name: "Legendary Finder", desc: "Obtain a LEGENDARY Aura in your collection", req: () => (inventory["LEGENDARY"] || 0) > 0, reward: 2000, claimed: false },
+      { id: "has_mythic", name: "Mythic Seeker", desc: "Obtain a MYTHIC Aura in your collection", req: () => (inventory["MYTHIC"] || 0) > 0, reward: 5000, claimed: false },
+      { id: "has_celestial", name: "Stargazer", desc: "Obtain a CELESTIAL Aura in your collection", req: () => (inventory["CELESTIAL"] || 0) > 0, reward: 15000, claimed: false },
+      { id: "has_divine", name: "Divine Touch", desc: "Obtain a DIVINE Aura in your collection", req: () => (inventory["DIVINE"] || 0) > 0, reward: 50000, claimed: false },
+      { id: "has_godly", name: "Ascended Being", desc: "Obtain a GODLY Aura in your collection", req: () => (inventory["GODLY"] || 0) > 0, reward: 200000, claimed: false },
+
+      // Game Features & Mechanics
+      { id: "auto_unlock", name: "Hands-Free", desc: "Unlock Auto Roll from the Shop", req: () => isAutoUnlocked(), reward: 300, claimed: false },
+      { id: "potion_active", name: "Brew Master", desc: "Activate a 2x Luck Potion", req: () => potionTimer > 0, reward: 400, claimed: false }
+    ];
+
+    const canvas = document.getElementById("particleCanvas");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+    function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function createParticles(color, count = 25) {
+      if (!gameSettings.visuals) return;
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: canvas.width / 2, y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 14, vy: (Math.random() - 0.5) * 14,
+          size: Math.random() * 5 + 2, color: color, alpha: 1, decay: Math.random() * 0.02 + 0.015
+        });
+      }
+    }
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (gameSettings.visuals) {
+        particles.forEach((p, i) => {
+          p.x += p.vx; p.y += p.vy; p.alpha -= p.decay;
+          ctx.fillStyle = p.color; ctx.globalAlpha = Math.max(0, p.alpha);
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+          if (p.alpha <= 0) particles.splice(i, 1);
+        });
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    function populateAdminAuraSelect() {
+      const select = document.getElementById("adminAuraSelect");
+      select.innerHTML = "";
+      AURAS.forEach(a => {
+        select.innerHTML += `<option value="${a.name}">${a.name} (1 in ${a.chance.toLocaleString()})</option>`;
+      });
+    }
+    populateAdminAuraSelect();
+
+    function isAutoUnlocked() {
+      const upg = UPGRADES.find(u => u.special === "unlock_auto");
+      return upg && upg.level > 0;
+    }
+
+    function isAutoSellActive() {
+      const upg = UPGRADES.find(u => u.special === "auto_sell");
+      return upg && upg.level > 0;
+    }
+
+    function getTotalLuck() {
+      let flat = 1.0;
+      UPGRADES.forEach(u => { if (u.addLuck) flat += u.addLuck * u.level; });
+      let total = flat + adminLuckBonus;
+      if (potionTimer > 0) total *= 2;
+      return total;
+    }
+
+    function getCoinsPerRoll() {
+      let base = 5;
+      const mag = UPGRADES.find(u => u.id === "coin_magnet");
+      if (mag) base += mag.bonusCoins * mag.level;
+      return base;
+    }
+
+    function getMaxPity() {
+      let pityReq = 50;
+      const pityUpg = UPGRADES.find(u => u.id === "pity_focus");
+      if (pityUpg) pityReq -= pityUpg.reducePity * pityUpg.level;
+      return Math.max(20, pityReq);
+    }
+
+    function getDoubleRollChance() {
+      const dbl = UPGRADES.find(u => u.id === "double_roll");
+      return dbl ? dbl.doubleChance * dbl.level : 0;
+    }
+
+    function rollSingleAura() {
+      rolls++;
+      coins += getCoinsPerRoll();
+      pityCount++;
+      playAudioTone('roll');
+
+      let luck = getTotalLuck();
+      let rolledAura = AURAS[AURAS.length - 1];
+      const maxPity = getMaxPity();
+
+      if (pityCount >= maxPity) {
+        pityCount = 0;
+        const rareAuras = AURAS.filter(a => a.rarityVal >= 1);
+        rolledAura = rareAuras[Math.floor(Math.random() * rareAuras.length)];
+      } else {
+        const rollVal = Math.random();
+        for (const aura of AURAS) {
+          if (rollVal <= (1 / aura.chance) * luck) {
+            rolledAura = aura;
+            if (aura.rarityVal >= 1) pityCount = 0;
+            break;
+          }
+        }
+      }
+
+      if (autoRolling && isAutoSellActive() && rolledAura.rarityVal === 0) {
+        coins += rolledAura.value;
+      } else {
+        inventory[rolledAura.name] = (inventory[rolledAura.name] || 0) + 1;
+      }
+
+      if (Math.random() < getDoubleRollChance()) {
+        setTimeout(() => {
+          const extraAura = rollSingleAura();
+          triggerBanner(`🎲 DOUBLE STRIKE! Extra Drop: ${extraAura.name}`);
+          updateUI();
+        }, 300);
+      }
+
+      return rolledAura;
+    }
+
+    function updateStageVisuals(rolledAura) {
+      document.getElementById("auraTitle").innerText = rolledAura.name;
+      document.getElementById("auraTitle").style.color = rolledAura.color;
+      document.getElementById("auraBadge").innerText = `1 in ${rolledAura.chance.toLocaleString()}`;
+      document.getElementById("auraBadge").style.color = rolledAura.color;
+      document.getElementById("auraOdds").innerText = `Sell Value: +${rolledAura.value} Coins`;
+
+      if (rolledAura.rarityVal >= 5) {
+        playAudioTone('rare');
+        triggerBanner(`🎉 RARE DROP: ${rolledAura.name}!`);
+        createParticles(rolledAura.color, 50);
+      }
+    }
+
+    function triggerBanner(text) {
+      const banner = document.getElementById("announceBanner");
+      banner.innerText = text; banner.style.display = "block";
+      setTimeout(() => { banner.style.display = "none"; }, 3000);
+    }
+
+    function manualRoll() {
+      const aura = rollSingleAura();
+      updateStageVisuals(aura);
+      updateUI();
+    }
+
+    function toggleAutoRoll() {
+      if (!isAutoUnlocked()) {
+        triggerBanner("🔒 Unlock Auto Roll in the Shop first!");
+        return;
+      }
+
+      autoRolling = !autoRolling;
+      const btn = document.getElementById("autoBtn");
+      if (autoRolling) {
+        btn.innerText = "🛑 STOP AUTO"; btn.classList.add("active"); runAutoLoop();
+      } else {
+        btn.innerText = "⚡ AUTO"; btn.classList.remove("active");
+        if (autoTimeout) clearTimeout(autoTimeout);
+      }
+    }
+
+    function runAutoLoop() {
+      if (!autoRolling) return;
+      const aura = rollSingleAura();
+      updateStageVisuals(aura);
+      updateUI();
+      const speedUpg = UPGRADES.find(u => u.special === "auto_speed");
+      const speed = Math.max(100, 800 - (speedUpg.level * 140));
+      autoTimeout = setTimeout(runAutoLoop, speed);
+    }
+
+    function sellAura(name) {
+      const aura = AURAS.find(a => a.name === name);
+      if (gameSettings.confirmRareSell && aura.rarityVal >= 3) {
+        if (!confirm(`Are you sure you want to sell 1x ${name}?`)) return;
+      }
+      if (inventory[name] && inventory[name] > 0) {
+        inventory[name]--; coins += aura.value;
+        if (inventory[name] === 0) delete inventory[name];
+        updateUI();
+      }
+    }
+
+    function fuseAura(name) {
+      const idx = AURAS.findIndex(a => a.name === name);
+      if (idx > 0 && inventory[name] >= 5) {
+        inventory[name] -= 5;
+        const higherAura = AURAS[idx - 1];
+        inventory[higherAura.name] = (inventory[higherAura.name] || 0) + 1;
+        triggerBanner(`🔮 FUSED 5x ${name} ➔ 1x ${higherAura.name}!`);
+        updateUI();
+      }
+    }
+
+    function buyUpgrade(idx) {
+      const upg = UPGRADES[idx];
+      if (upg.maxLevel && upg.level >= upg.maxLevel) return;
+      const cost = Math.floor(upg.baseCost * Math.pow(upg.multCost || 1, upg.level));
+      if (coins >= cost) {
+        coins -= cost;
+        if (upg.special === "potion") {
+          activatePotion();
+        } else {
+          upg.level++;
+        }
+        updateUI();
+      }
+    }
+
+    function activatePotion() {
+      potionTimer = 60;
+      document.getElementById("potionBanner").style.display = "block";
+      if (potionInterval) clearInterval(potionInterval);
+      potionInterval = setInterval(() => {
+        potionTimer--;
+        document.getElementById("potionTime").innerText = potionTimer;
+        if (potionTimer <= 0) {
+          clearInterval(potionInterval);
+          document.getElementById("potionBanner").style.display = "none";
+          updateUI();
+        }
+      }, 1000);
+    }
+
+    function claimAchievement(idx) {
+      const ach = ACHIEVEMENTS[idx];
+      if (ach.req() && !ach.claimed) {
+        ach.claimed = true; coins += ach.reward;
+        triggerBanner(`🏆 Claimed Reward: +${ach.reward} Coins!`);
+        updateUI();
+      }
+    }
+
+    function switchTab(tab) {
+      document.getElementById("tabInventory").style.display = tab === 'inventory' ? 'grid' : 'none';
+      document.getElementById("tabAlchemy").style.display = tab === 'alchemy' ? 'grid' : 'none';
+      document.querySelectorAll('.tab-bar button').forEach((b, i) => {
+        if (i < 2) b.classList.toggle('active', (i === 0 && tab === 'inventory') || (i === 1 && tab === 'alchemy'));
+      });
+    }
+
+    function switchRightTab(tab) {
+      document.getElementById("rightShop").style.display = tab === 'shop' ? 'flex' : 'none';
+      document.getElementById("rightAchieve").style.display = tab === 'achieve' ? 'flex' : 'none';
+      document.getElementById("btnShopTab").classList.toggle('active', tab === 'shop');
+      document.getElementById("btnAchieveTab").classList.toggle('active', tab === 'achieve');
+    }
+
+    function updateUI() {
+      document.getElementById("statRolls").innerText = rolls.toLocaleString();
+      document.getElementById("statCoins").innerText = coins.toLocaleString();
+      document.getElementById("statLuck").innerText = getTotalLuck().toFixed(1) + "x";
+      document.getElementById("statPity").innerText = `${pityCount}/${getMaxPity()}`;
+
+      const autoBtn = document.getElementById("autoBtn");
+      if (!isAutoUnlocked()) {
+        autoBtn.classList.add("locked");
+        autoBtn.innerText = "🔒 AUTO";
+      } else if (!autoRolling) {
+        autoBtn.classList.remove("locked");
+        autoBtn.innerText = "⚡ AUTO";
+      }
+
+      renderInventory();
+      renderShop();
+      renderAchievements();
+    }
+
+    function renderInventory() {
+      const invEl = document.getElementById("tabInventory");
+      const alcEl = document.getElementById("tabAlchemy");
+      invEl.innerHTML = ""; alcEl.innerHTML = "";
+
+      for (const [name, count] of Object.entries(inventory)) {
+        if (count <= 0) continue;
+        const aura = AURAS.find(a => a.name === name);
+        
+        invEl.innerHTML += `
+          <div class="inv-card" style="border-color:${aura.color}44">
+            <div class="inv-name" style="color:${aura.color}">${name}</div>
+            <div class="inv-meta"><span>x${count}</span><span>+${aura.value}c</span></div>
+            <button class="btn-card-action btn-sell" onclick="sellAura('${name}')">SELL 1</button>
+          </div>`;
+
+        if (count >= 5) {
+          alcEl.innerHTML += `
+            <div class="inv-card" style="border-color:${aura.color}44">
+              <div class="inv-name" style="color:${aura.color}">${name}</div>
+              <div class="inv-meta"><span>Available: ${count}</span></div>
+              <button class="btn-card-action btn-fuse" onclick="fuseAura('${name}')">🔮 FUSE 5</button>
+            </div>`;
+        }
+      }
+    }
+
+    function renderShop() {
+      const shopEl = document.getElementById("rightShop");
+      shopEl.innerHTML = "";
+      UPGRADES.forEach((upg, i) => {
+        const isMax = upg.maxLevel && upg.level >= upg.maxLevel;
+        const cost = Math.floor(upg.baseCost * Math.pow(upg.multCost || 1, upg.level));
+        const lvlTag = upg.special !== 'potion' && upg.special !== 'unlock_auto' ? ` [Lvl ${upg.level}${upg.maxLevel ? `/${upg.maxLevel}` : ''}]` : '';
+        
+        shopEl.innerHTML += `
+          <div class="shop-card">
+            <div class="shop-info">
+              <h4>${upg.name}${lvlTag}</h4>
+              <p>${upg.desc}</p>
+            </div>
+            <button class="btn-buy" onclick="buyUpgrade(${i})" ${coins < cost || isMax ? "disabled" : ""}>
+              ${isMax ? "UNLOCKED" : `${cost.toLocaleString()} Coins`}
+            </button>
+          </div>`;
+      });
+    }
+
+    function renderAchievements() {
+      const achEl = document.getElementById("rightAchieve");
+      achEl.innerHTML = "";
+      ACHIEVEMENTS.forEach((ach, i) => {
+        const canClaim = ach.req() && !ach.claimed;
+        achEl.innerHTML += `
+          <div class="achieve-card">
+            <div class="achieve-info">
+              <h4>${ach.name}</h4>
+              <p>${ach.desc} (+${ach.reward.toLocaleString()} Coins)</p>
+            </div>
+            <button class="btn-claim" onclick="claimAchievement(${i})" ${!canClaim ? "disabled" : ""}>
+              ${ach.claimed ? "CLAIMED" : "CLAIM"}
+            </button>
+          </div>`;
+      });
+    }
+
+    function openSettings() { document.getElementById("settingsModal").classList.add("open"); }
+    function closeSettings() { document.getElementById("settingsModal").classList.remove("open"); }
+
+    function updateSettings() {
+      gameSettings.sfx = document.getElementById("setSfx").checked;
+      gameSettings.visuals = document.getElementById("setVisuals").checked;
+      gameSettings.confirmRareSell = document.getElementById("setConfirmSell").checked;
+
+      document.getElementById("orb1").style.opacity = gameSettings.visuals ? "1" : "0";
+      document.getElementById("orb2").style.opacity = gameSettings.visuals ? "1" : "0";
+    }
+
+    function exportSaveData() {
+      const saveData = btoa(JSON.stringify({ rolls, coins, pityCount, inventory, upgrades: UPGRADES.map(u => u.level) }));
+      navigator.clipboard.writeText(saveData);
+      triggerBanner("💾 Save Code Copied to Clipboard!");
+    }
+
+    function importSaveData() {
+      const code = prompt("Paste your export save code here:");
+      if (code) {
+        try {
+          const parsed = JSON.parse(atob(code));
+          rolls = parsed.rolls || 0;
+          coins = parsed.coins || 0;
+          pityCount = parsed.pityCount || 0;
+          inventory = parsed.inventory || {};
+          if (parsed.upgrades) parsed.upgrades.forEach((lvl, i) => { if (UPGRADES[i]) UPGRADES[i].level = lvl; });
+          updateUI();
+          triggerBanner("📥 Save Data Loaded!");
+        } catch (e) {
+          triggerBanner("❌ Invalid Save Code!");
+        }
+      }
+    }
+
+    function openAdmin() { document.getElementById("adminModal").classList.add("open"); }
+    function closeAdmin() { document.getElementById("adminModal").classList.remove("open"); }
+
+    function verifyAdminPasscode() {
+      const val = document.getElementById("adminPasscodeInput").value.trim();
+      if (btoa(val) === ADMIN_HASH) {
+        document.getElementById("adminControls").style.display = "flex";
+        document.getElementById("adminAuthBox").style.display = "none";
+        document.getElementById("adminAuthBadge").innerText = "[UNLOCKED]";
+        document.getElementById("adminAuthBadge").style.color = "#34d399";
+      } else {
+        triggerBanner("❌ Incorrect Passcode!");
+      }
+    }
+
+    function adminAddCoins(amt) { coins += amt; updateUI(); triggerBanner(`👑 Granted +${amt.toLocaleString()} Coins`); }
+    function adminAddCustomCoins() {
+      const val = parseInt(document.getElementById("customCoinAmt").value);
+      if (!isNaN(val) && val > 0) { adminAddCoins(val); }
+    }
+    function adminSetLuck(mult) { adminLuckBonus = mult; updateUI(); triggerBanner(`👑 Luck set to ${mult}x`); }
+    function adminMaxUpgrades() {
+      UPGRADES.forEach(u => {
+        if (u.maxLevel) u.level = u.maxLevel;
+        else u.level += 10;
+      });
+      updateUI();
+      triggerBanner("👑 Maxed All Upgrades!");
+    }
+    function adminFillPity() { pityCount = getMaxPity(); updateUI(); triggerBanner("👑 Pity Counter Maxed!"); }
+    function adminSpawnAura() {
+      const auraName = document.getElementById("adminAuraSelect").value;
+      inventory[auraName] = (inventory[auraName] || 0) + 1;
+      updateUI();
+      triggerBanner(`👑 Spawned 1x ${auraName}`);
+    }
+    function adminResetData() {
+      rolls = 0; coins = 0; pityCount = 0; adminLuckBonus = 0; inventory = {};
+      UPGRADES.forEach(u => u.level = 0);
+      updateUI();
+      triggerBanner("⚠️ Game Progress Reset");
+    }
+
+    updateUI();
+  </script>
+</body>
+</html>
