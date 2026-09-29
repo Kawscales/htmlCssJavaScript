@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <title>CSS Units Task</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .title {
+      font-size: 2.5rem;
+    }
+
+    
+    .subtitle {
+      font-size: 1.5rem;
+    }
+
+   
+    .fine-print {
+      font-size: 0.875rem;
+    }
+
+    
+    .level {
+      font-size: 1.25em;
+      border-left: 3px solid tomato;
+      padding-left: 0.5rem;
+    }
+
+   
+    .menu li {
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+ 
+  <h2>Step 1: px to rem</h2>
+  <p class="title">Title (40px)</p>
+  <p class="subtitle">Subtitle (24px)</p>
+  <p class="fine-print">Fine print (14px)</p>
+
+  <h2>Step 2: Predict nested em</h2>
+  <div class="level">Level 1
+    <div class="level">Level 2
+      <div class="level">Level 3</div>
+    </div>
+  </div>
+
+  
+  <h2>Step 3: Fix the shrinking menu</h2>
+  <ul class="menu">
+    <li>Home
+      <ul>
+        <li>Projects
+          <ul>
+            <li>Web Design
+              <ul>
+                <li>This text is getting hard to read</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+
+</body>
+</html>
