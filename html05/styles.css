@@ -1,0 +1,30 @@
+/* ===== Page setup ===== */
+body {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* ===== DEMO 1: px to rem ===== */
+.headline {
+  font-size: 2rem;
+}
+
+.intro {
+  font-size: 1.125rem;
+}
+
+/* ===== DEMO 2: nested em ===== */
+.box {
+  font-size: 1.5em;
+  border-left: 3px solid rgb(90, 16, 16);   /* px for borders */
+  padding-left: 0.5rem;
+}
+
+/* ===== DEMO 3: shrinking text ===== */
+.comment {
+  font-size: 0.5rem;
+  border-left: 3px solid rgb(11, 66, 110);
+  padding-left: 0.5rem;
+}

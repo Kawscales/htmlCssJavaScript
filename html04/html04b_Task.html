@@ -6,102 +6,85 @@
     <title>HTML 5 Media Task</title>
 
     <style>
-        table, th, td { border: 1px solid #333; border-collapse: callapes; }
+        table, th, td { border: 1px solid #333; border-collapse: collapse; }
         th, td { padding: 6px; }
     </style>
 </head>
 <body>
     
-<h1>HTML 5 Media Task</h1>
-<p>Practice embedding videos, audio, and external media contecnt</p>
- 
+    <h1>HTML 5 Media Task</h1>
+    <p>Practice embedding videos, audio, and external media content</p>
 
-<video width="400" height="300" controls>
-    <source src="video/demo.mp4" type="video/mp4">
-</video>
+    <section id="video">
+        <h2>Embed HTML5 Video</h2>
+        <video width="400" height="300" controls>
+            <source src="video/demo.mp4" type="video/mp4">
+        </video>
+        <p>Use the <code>&lt;video&gt;</code> tag to embed local video files.</p>
+        <p>
+            <strong>Tip:</strong> Provide multiple source formats (MP4, WebM) for browser compatibility.
+        </p>
+    </section>
 
+    <section id="audio">
+        <h2>Embed HTML5 Audio</h2>
+        <audio controls>
+            <source src="media/demo.mp4" type="audio/mp4">
+        </audio>
+        <p>Use the <code>&lt;audio&gt;</code> tag for podcasts, music, or sound effects.</p>
+        <p>
+            <strong>Tip:</strong> Always include the <code>controls</code> attribute so users can play, pause, and adjust volume.
+        </p>
+    </section>
 
-  
-  <section id="video">
-    <h2>Embed HTML5 Video</h2>
-    <p>Use the <code>&lt;video&gt;</code> tag to embed local video files.</p>
+    <section id="youtube">
+        <h2>Embed YouTube Video</h2>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/aqz-KE-bpKQ"></iframe>
+        <p>Use <code>&lt;iframe&gt;</code> to embed videos from external sources like YouTube.</p>
+        <p>
+            <strong>Important:</strong> Use the EMBED URL (ends with /embed/VIDEO_ID), not the share URL!
+        </p>
+    </section>
 
-    <p>
-      <strong>Tip:</strong> Provide multiple source formats (MP4, WebM) for browser compatibility.
-    </p>
-  </section>
+    <section id="formats">
+        <h2>Media Format Reference</h2>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Format</th>
+                <th>File Extension</th>
+                <th>MIME Type</th>
+            </tr>
+            <tr>
+                <td>Video</td>
+                <td>MP4 (most compatible)</td>
+                <td>.mp4</td>
+                <td>video/mp4</td>
+            </tr>
+            <tr>
+                <td>Video</td>
+                <td>WebM</td>
+                <td>.webm</td>
+                <td>video/webm</td>
+            </tr>
+            <tr>
+                <td>Audio</td>
+                <td>MP3 (most compatible)</td>
+                <td>.mp3</td>
+                <td>audio/mpeg</td>
+            </tr>
+            <tr>
+                <td>Audio</td>
+                <td>OGG</td>
+                <td>.ogg</td>
+                <td>audio/ogg</td>
+            </tr>
+        </table>
+    </section>
 
+    <footer>
+        <p>Task complete! Test all media elements in your browser.</p>
+    </footer>
 
-  <source scr="media/demo.mp4" type="audio/mp4"
-
- <section id="audio">
-    <h2>Embed HTML5 Audio</h2>
-    <p>Use the <code>&lt;audio&gt;</code> tag for podcasts, music, or sound effects.</p>
-
-    <p>
-      <strong>Tip:</strong> Always include the <code>controls</code> attribute so users can play, pause, and adjust volume.
-    </p>
- </section>
-
-<iframe width="560" height="315"
- src="https://www.youtube.com/embed/aqz-KE-bpKQ"
-
-
-  <section id="youtube">
-    <h2>Embed YouTube Video</h2>
-    <p>Use <code>&lt;iframe&gt;</code> to embed videos from external sources like YouTube.</p>
-
-    <p>
-      <strong>Important:</strong> Use the EMBED URL (ends with /embed/VIDEO_ID), not the share URL!
-    </p>
-  </section>
-
-<section id="formats">
-    <h2>Media Format Reference</h2>
-    <table>
-      <tr>
-        <th>Type</th>
-        <th>Format</th>
-        <th>File Extension</th>
-        <th>MIME Type</th>
-      </tr>
-      <tr>
-        <td>Video</td>
-        <td>MP4 (most compatible)</td>
-        <td>.mp4</td>
-        <td>video/mp4</td>
-      </tr>
-      <tr>
-        <td>Video</td>
-        <td>WebM</td>
-        <td>.webm</td>
-        <td>video/webm</td>
-      </tr>
-      <tr>
-        <td>Audio</td>
-        <td>MP3 (most compatible)</td>
-        <td>.mp3</td>
-        <td>audio/mpeg</td>
-      </tr>
-      <tr>
-        <td>Audio</td>
-        <td>OGG</td>
-        <td>.ogg</td>
-        <td>audio/ogg</td>
-      </tr>
-    </table>
-  </section>
-
-  <footer>
-    <p>Task complete! Test all media elements in your browser.</p>
-  </footer>
-
-</body>
-</html>
-
-
-
-
- 
 </body>
 </html>

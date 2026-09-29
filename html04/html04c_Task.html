@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Task</title>
+
+    <style>
+        table, th, td { 
+            border: 1px solid #000000; 
+            border-collapse: collapse;
+        }
+        th, td { 
+            padding: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>HTML Tables Task</h1>
+    <p>Practice building data tables with captions, header cells, colspan, and rowspan.</p>
+
+    <section id="grades-table">
+        <h2>Grades Table</h2>
+        <table>
+            <caption>Student Grades</caption>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Math</th>
+                    <th>English</th>
+                    <th>Science</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Landon</td>
+                    <td>95</td>
+                    <td>87</td>
+                    <td>92</td>
+                </tr>
+                <tr>
+                    <td>Tjay</td>
+                    <td>88</td>
+                    <td>91</td>
+                    <td>85</td>
+                </tr>
+                <tr>
+                    <td>Esther</td>
+                    <td>93</td>
+                    <td>97</td>
+                    <td>89</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="simple-table">
+        <h2>Simple Table</h2>
+        <p>A basic table has a caption, one header row, and data rows.</p>
+
+        <p>
+            <strong>Remember:</strong> Use &lt;th&gt; for header cells and &lt;td&gt; for data cells. 
+            Each row goes inside its own &lt;tr&gt;.
+        </p>
+
+        <table>
+            <caption>Sales by Region</caption>
+            <thead>
+                <tr>
+                    <th>Region</th>
+                    <th>Q1</th>
+                    <th>Q2</th>
+                    <th>Q3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>East</td>
+                    <td>$50,000</td>
+                    <td>$55,000</td>
+                    <td>$60,000</td>
+                </tr>
+                <tr>
+                    <td>West</td>
+                    <td>$45,000</td>
+                    <td>$48,000</td>
+                    <td>$52,000</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="rowspan-table">
+        <h2>Table with rowspan &amp; colspan</h2>
+        <p>
+            The <code>rowspan</code> attribute stretches a cell vertically across rows, while <code>colspan</code> stretches a cell horizontally across columns.
+        </p>
+
+        <table>
+            <caption>Product Inventory</caption>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Location</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="2">Laptop</td>
+                    <td>Warehouse A</td>
+                    <td>15</td>
+                </tr>
+                <tr>
+                    <td>Warehouse B</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td>Monitor</td>
+                    <td>Warehouse A</td>
+                    <td>20</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"><strong>Total Units</strong></td>
+                    <td><strong>45</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+
+    <section id="accessible-table">
+        <h2>Accessible Table (Reference)</h2>
+        <p>Best practice: add the <code>scope</code> attribute to header cells so screen readers can tell which cells they label.</p>
+
+        <table>
+            <caption>Product Performance Report</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Q1 Sales</th>
+                    <th scope="col">Q2 Sales</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Widget A</th>
+                    <td>$25,000</td>
+                    <td>$30,000</td>
+                </tr>
+                <tr>
+                    <th scope="row">Widget B</th>
+                    <td>$15,000</td>
+                    <td>$18,000</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+
+</body>
+</html>
