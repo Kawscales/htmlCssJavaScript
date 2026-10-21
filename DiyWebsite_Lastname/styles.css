@@ -1,0 +1,56 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1 rem 2rem;
+}
+
+header nav {
+    display: flex;
+    gap: 1rem;
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.gallery figure {
+    flex: 1;
+    min-width: 15rem;
+    margin: 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .gallery {
+        flex-direction: column;
+    }
+}
+
+body {
+    background: linear-gradient(180deg, #2e0c0c 0%, #000000 100%);
+    background-attachment: fixed;
+    color: rgb(126, 34, 34);
+
+}
+
+a {
+    color: rgb(255, 0, 0);
+}

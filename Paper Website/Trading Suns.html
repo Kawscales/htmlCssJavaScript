@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LANDON LANCE // CYBER TERMINAL v3.5 | 100x Trading Engine & Suns Analytics</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#050811',
+              card: 'rgba(13, 18, 30, 0.85)',
+              border: 'rgba(51, 65, 85, 0.4)',
+              cyan: '#00f3ff',
+              green: '#10b981',
+              purple: '#9d4edd',
+              red: '#ef4444',
+              orange: '#f97316',
+              gold: '#eab308',
+              sunsPurple: '#552583',
+              sunsOrange: '#f9a01b'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --accent-color: #00f3ff;
+      --accent-glow: rgba(0, 243, 255, 0.35);
+      --secondary-accent: #9d4edd;
+      --bg-gradient-1: rgba(0, 243, 255, 0.05);
+      --bg-gradient-2: rgba(157, 78, 221, 0.05);
+    }
+
+    /* THEME PRESETS */
+    body.theme-gold100x {
+      --accent-color: #eab308;
+      --accent-glow: rgba(234, 179, 8, 0.4);
+      --secondary-accent: #f97316;
+      --bg-gradient-1: rgba(234, 179, 8, 0.06);
+      --bg-gradient-2: rgba(249, 115, 22, 0.06);
+    }
+    body.theme-suns {
+      --accent-color: #f9a01b;
+      --accent-glow: rgba(249, 160, 27, 0.35);
+      --secondary-accent: #7b2cbf;
+      --bg-gradient-1: rgba(249, 160, 27, 0.05);
+      --bg-gradient-2: rgba(123, 44, 191, 0.05);
+    }
+    body.theme-matrix {
+      --accent-color: #00ff88;
+      --accent-glow: rgba(0, 255, 136, 0.35);
+      --secondary-accent: #00b4d8;
+      --bg-gradient-1: rgba(0, 255, 136, 0.05);
+      --bg-gradient-2: rgba(0, 180, 216, 0.05);
+    }
+    body.theme-vaporwave {
+      --accent-color: #ff007f;
+      --accent-glow: rgba(255, 0, 127, 0.35);
+      --secondary-accent: #00f3ff;
+      --bg-gradient-1: rgba(255, 0, 127, 0.05);
+      --bg-gradient-2: rgba(0, 243, 255, 0.05);
+    }
+
+    body {
+      background-color: #050811;
+      color: #f1f5f9;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 15%, var(--bg-gradient-1) 0%, transparent 40%),
+        radial-gradient(circle at 90% 85%, var(--bg-gradient-2) 0%, transparent 40%),
+        linear-gradient(180deg, rgba(5, 8, 17, 0.96) 0%, rgba(8, 12, 22, 1) 100%);
+      background-attachment: fixed;
+    }
+
+    /* Custom Glassmorphism */
+    .glass-panel {
+      background: rgba(13, 18, 30, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+    }
+
+    .glass-panel-glow {
+      position: relative;
+    }
+    .glass-panel-glow::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, var(--accent-glow), transparent 50%, var(--secondary-accent));
+      border-radius: inherit;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(10, 15, 26, 0.8);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-color);
+    }
+
+    /* Dynamic Accent Classes */
+    .theme-accent-text { color: var(--accent-color); }
+    .theme-accent-bg { background-color: var(--accent-color); }
+    .theme-accent-border { border-color: var(--accent-color); }
+
+    .glow-accent {
+      box-shadow: 0 0 18px var(--accent-glow);
+    }
+
+    /* Ticker animation */
+    @keyframes ticker {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+    .animate-ticker {
+      display: flex;
+      width: max-content;
+      animation: ticker 32s linear infinite;
+    }
+    .animate-ticker:hover {
+      animation-play-state: paused;
+    }
+
+    /* Orderbook depth bar transition */
+    .depth-bar {
+      transition: width 0.25s ease-out;
+    }
+
+    /* Pulse animation for 100x badges */
+    @keyframes badgeGlow {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+    .animate-badge {
+      animation: badgeGlow 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="theme-gold100x min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- ================= TOP HEADER NAVIGATION ================= -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80 px-4 lg:px-8 py-2.5">
+    <div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand Logo & Title -->
+      <div class="flex items-center gap-3.5">
+        <div class="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-400 via-purple-600 to-cyan-400 p-[2px] shadow-lg shadow-amber-500/20 glow-accent">
+          <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+            <i class="fa-solid fa-bolt text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-cyan-400 text-xl"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl font-black tracking-wider text-white uppercase font-mono">
+              LANDON<span class="theme-accent-text font-normal">LANCE</span>
+            </h1>
+            <span class="px-2 py-0.5 text-[10px] font-extrabold tracking-widest text-amber-300 bg-amber-950/90 border border-amber-500/50 rounded-md shadow-sm animate-badge">100x ULTRA v3.5</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-medium tracking-wide">100x Leverage Trading Desk & Phoenix Suns Sports Analytics Hub</p>
+        </div>
+      </div>
+
+      <!-- Navigation Jump Links -->
+      <nav class="hidden xl:flex items-center space-x-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800/90">
+        <button onclick="scrollToSection('crypto-module')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold theme-accent-text bg-slate-800 border border-slate-700/80 shadow-sm flex items-center gap-2 transition">
+          <i class="fa-solid fa-chart-line text-amber-400"></i> 100x Trading Desk
+        </button>
+        <button onclick="scrollToSection('positions-module')" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-2">
+          <i class="fa-solid fa-wallet text-emerald-400"></i> Open Positions (<span id="nav-pos-count">0</span>)
+        </button>
+        <button onclick="scrollToSection('sports-module')" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-2">
+          <i class="fa-solid fa-basketball text-amber-400"></i> Suns Analytics
+        </button>
+        <button onclick="scrollToSection('shot-visualizer-section')" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-2">
+          <i class="fa-solid fa-bullseye text-purple-400"></i> Shot Chart Engine
+        </button>
+      </nav>
+
+      <!-- Global Controls & Status -->
+      <div class="flex items-center gap-3">
+        
+        <!-- Stream Online Indicator -->
+        <div class="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <span class="font-semibold tracking-wide">100x FEED LIVE</span>
+        </div>
+
+        <!-- Theme Switcher -->
+        <div class="relative group">
+          <button class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-400 transition flex items-center gap-2 text-xs font-mono">
+            <i class="fa-solid fa-palette text-amber-400"></i>
+            <span class="hidden md:inline">Theme</span>
+          </button>
+          <div class="absolute right-0 mt-2 w-48 bg-slate-900/95 border border-slate-800 rounded-xl p-1.5 shadow-2xl opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition duration-200 z-50 text-xs font-mono">
+            <button onclick="setTheme('gold100x')" class="w-full text-left px-3 py-1.5 rounded-lg hover:bg-slate-800 text-amber-400 flex items-center justify-between">
+              100x Cyber Gold <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+            </button>
+            <button onclick="setTheme('default')" class="w-full text-left px-3 py-1.5 rounded-lg hover:bg-slate-800 text-cyan-400 flex items-center justify-between">
+              Cyan Matrix <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+            </button>
+            <button onclick="setTheme('suns')" class="w-full text-left px-3 py-1.5 rounded-lg hover:bg-slate-800 text-orange-400 flex items-center justify-between">
+              Suns Fire <span class="w-2.5 h-2.5 rounded-full bg-orange-400"></span>
+            </button>
+            <button onclick="setTheme('matrix')" class="w-full text-left px-3 py-1.5 rounded-lg hover:bg-slate-800 text-emerald-400 flex items-center justify-between">
+              Emerald Hacker <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+            </button>
+            <button onclick="setTheme('vaporwave')" class="w-full text-left px-3 py-1.5 rounded-lg hover:bg-slate-800 text-pink-400 flex items-center justify-between">
+              Neon Vaporwave <span class="w-2.5 h-2.5 rounded-full bg-pink-500"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Audio Sound FX Toggle -->
+        <button onclick="toggleAudioFeedback()" id="audio-btn" title="Toggle Synthesized Sound FX" class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-400 transition">
+          <i id="audio-icon" class="fa-solid fa-volume-xmark text-sm"></i>
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Live Marquee Ticker Tape -->
+  <div class="bg-slate-950/90 border-b border-slate-900 py-1.5 overflow-hidden text-xs font-mono">
+    <div class="animate-ticker space-x-8 text-slate-400" id="ticker-content">
+      <span class="inline-flex items-center gap-2"><strong class="text-slate-200">BTC/USD</strong> <span id="ticker-btc">$67,420.50</span> <span class="text-emerald-400 font-semibold">+3.82% ▲</span></span>
+      <span class="inline-flex items-center gap-2"><strong class="text-amber-400 font-bold">CATE/USD</strong> <span id="ticker-cate">$0.00000452</span> <span class="text-emerald-400 font-semibold">+18.40% ▲</span></span>
+      <span class="inline-flex items-center gap-2"><strong class="text-slate-200">ETH/USD</strong> <span id="ticker-eth">$3,520.10</span> <span class="text-emerald-400 font-semibold">+2.15% ▲</span></span>
+      <span class="inline-flex items-center gap-2"><strong class="text-slate-200">SOL/USD</strong> <span id="ticker-sol">$154.80</span> <span class="text-emerald-400 font-semibold">+7.30% ▲</span></span>
+      <span class="inline-flex items-center gap-2"><strong class="text-amber-400 font-bold">SUNS/USD</strong> <span id="ticker-suns">$12.45</span> <span class="text-emerald-400 font-semibold">+9.10% ▲</span></span>
+      <span class="inline-flex items-center gap-2"><strong class="text-purple-400">100x MARGIN</strong> MAX LIQUIDITY ONLINE <span class="text-amber-400 font-bold">0% FEES</span></span>
+      <!-- Loop duplicate -->
+      <span class="inline-flex items-center gap-2"><strong class="text-slate-200">BTC/USD</strong> $67,420.50 <span class="text-emerald-400 font-semibold">+3.82% ▲</span></span>
+      <span class="inline-flex items-center gap-2"><strong class="text-amber-400 font-bold">CATE/USD</strong> $0.00000452 <span class="text-emerald-400 font-semibold">+18.40% ▲</span></span>
+      <span class="inline-flex items-center gap-2"><strong class="text-slate-200">ETH/USD</strong> $3,520.10 <span class="text-emerald-400 font-semibold">+2.15% ▲</span></span>
+    </div>
+  </div>
+
+  <!-- GLOBAL PORTFOLIO & BALANCE HEADER DASHBOARD -->
+  <section class="max-w-[1920px] mx-auto px-4 lg:px-8 pt-4 w-full">
+    <div class="grid grid-cols-2 md:grid-cols-6 gap-3 p-3.5 rounded-2xl glass-panel glass-panel-glow border border-slate-800/90 text-xs font-mono">
+      
+      <!-- Metric 1: Virtual Cash Balance -->
+      <div class="flex items-center gap-3">
+        <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+          <i class="fa-solid fa-wallet text-lg"></i>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-semibold">Available Cash</span>
+          <span id="paper-balance-display" class="text-amber-400 font-black text-sm tracking-tight">$10,000.00</span>
+        </div>
+      </div>
+
+      <!-- Metric 2: Total Equity -->
+      <div class="flex items-center gap-3">
+        <div class="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+          <i class="fa-solid fa-chart-pie text-lg"></i>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-semibold">Net Equity</span>
+          <span id="portfolio-equity-display" class="text-slate-100 font-black text-sm tracking-tight">$10,000.00</span>
+        </div>
+      </div>
+
+      <!-- Metric 3: Unrealized PnL -->
+      <div class="flex items-center gap-3">
+        <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+          <i class="fa-solid fa-scale-balanced text-lg"></i>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-semibold">Unrealized PnL</span>
+          <span id="unrealized-pnl-display" class="text-emerald-400 font-bold text-xs">$0.00 (+0.00%)</span>
+        </div>
+      </div>
+
+      <!-- Metric 4: Used Margin -->
+      <div class="flex items-center gap-3">
+        <div class="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400">
+          <i class="fa-solid fa-layer-group text-lg"></i>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-semibold">Used Margin</span>
+          <span id="used-margin-display" class="text-slate-200 font-bold text-xs">$0.00</span>
+        </div>
+      </div>
+
+      <!-- Metric 5: Market Sentiment Dial -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 relative flex items-center justify-center">
+          <canvas id="fearGreedCanvas" class="w-10 h-10"></canvas>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-semibold">100x Sentiment</span>
+          <span class="text-emerald-400 font-bold text-xs">78 (Ultra Bullish)</span>
+        </div>
+      </div>
+
+      <!-- Metric 6: Portfolio Reset & Quick Actions -->
+      <div class="flex items-center justify-between col-span-2 md:col-span-1 border-t md:border-t-0 md:border-l border-slate-800/80 pt-2 md:pt-0 md:pl-4">
+        <div>
+          <span class="text-slate-400 block text-[10px] uppercase font-semibold">Active Positions</span>
+          <span id="active-positions-count" class="text-amber-400 font-extrabold text-xs">0 Trade / 0 Bets</span>
+        </div>
+        <button onclick="resetPaperBalance()" title="Reset virtual account to $10,000" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700/80 text-[10px] text-amber-300 font-bold transition flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-rotate-left"></i> Reset $10k
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-[1920px] mx-auto p-4 lg:p-8 space-y-10 flex-grow w-full">
+
+    <!-- ==================================================================== -->
+    <!-- MODULE 1: TOP TOKEN TRENDING, 100x CHART & BUY/SELL TRADING DOCK   -->
+    <!-- ==================================================================== -->
+    <section id="crypto-module" class="scroll-mt-20 space-y-4">
+      
+      <!-- Module Title Header -->
+      <div class="flex flex-wrap items-center justify-between gap-2 border-l-4 theme-accent-border pl-3 py-1">
+        <div>
+          <h2 class="text-xl font-black tracking-wide text-white flex items-center gap-2 font-mono">
+            <span>100x CRYPTO TRADING TERMINAL</span>
+            <span class="text-xs px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">MODULE 1</span>
+          </h2>
+          <p class="text-xs text-slate-400">Instant Buy/Sell order execution, 100x leverage margin desk, live orderbook depth & 60fps charting</p>
+        </div>
+        <div class="text-xs text-slate-400 font-mono flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>WEBSOCKET STATUS: <strong class="text-emerald-400 font-bold">100x MARGIN LIQUIDITY ACTIVE</strong></span>
+        </div>
+      </div>
+
+      <!-- Main Grid Layout (4 Cols Left, 8 Cols Right) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- LEFT PANEL: Top Token Trending & Live Orderbook Depth -->
+        <div class="lg:col-span-4 flex flex-col space-y-5">
+          
+          <!-- Token Selector Box -->
+          <div class="glass-panel rounded-2xl border border-slate-800 p-4 space-y-4">
+            
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider font-mono flex items-center gap-2">
+                <i class="fa-solid fa-fire text-amber-400"></i> Top Trending Coins
+              </h3>
+              <span class="text-[10px] text-amber-400 font-mono bg-amber-950/80 px-2 py-0.5 rounded border border-amber-500/30">100x Enabled</span>
+            </div>
+
+            <!-- Search Bar Input -->
+            <div class="relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-500"></i>
+              <input type="text" id="token-search-input" onkeyup="filterTokensBySearch()" placeholder="Search coin symbol or name..." class="w-full bg-slate-950/90 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-amber-500 transition">
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div class="flex space-x-1 bg-slate-950/90 p-1 rounded-xl border border-slate-800/90 text-[11px] font-mono">
+              <button onclick="filterTokens('all')" class="token-tab flex-1 py-1 rounded-lg text-amber-400 bg-slate-800 border border-slate-700/80 text-center font-bold transition">All</button>
+              <button onclick="filterTokens('meme')" class="token-tab flex-1 py-1 rounded-lg text-slate-400 hover:text-slate-200 text-center transition">Meme</button>
+              <button onclick="filterTokens('defi')" class="token-tab flex-1 py-1 rounded-lg text-slate-400 hover:text-slate-200 text-center transition">DeFi</button>
+              <button onclick="filterTokens('l1')" class="token-tab flex-1 py-1 rounded-lg text-slate-400 hover:text-slate-200 text-center transition">L1</button>
+              <button onclick="filterTokens('suns')" class="token-tab flex-1 py-1 rounded-lg text-slate-400 hover:text-slate-200 text-center transition">Suns</button>
+            </div>
+
+            <!-- Token Cards List -->
+            <div id="token-list-container" class="space-y-2 overflow-y-auto max-h-[340px] pr-1 font-mono">
+              <!-- Dynamically Populated Tokens -->
+            </div>
+
+          </div>
+
+          <!-- Live Order Book & Depth Panel -->
+          <div id="orderbook-panel" class="glass-panel rounded-2xl border border-slate-800 p-4 space-y-3 font-mono text-xs">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+              <h3 class="font-bold text-slate-200 uppercase flex items-center gap-2">
+                <i class="fa-solid fa-bars-staggered text-amber-400"></i> Order Book Depth
+              </h3>
+              <span class="text-[10px] text-emerald-400 font-semibold animate-pulse">LIVE STREAM</span>
+            </div>
+
+            <div class="grid grid-cols-3 text-[10px] text-slate-500 uppercase pb-1 border-b border-slate-900">
+              <span>Price (USD)</span>
+              <span class="text-right">Size</span>
+              <span class="text-right">Depth</span>
+            </div>
+
+            <!-- Asks (Red Sell Orders) -->
+            <div id="orderbook-asks" class="space-y-1"></div>
+
+            <!-- Spread Indicator -->
+            <div class="py-1 px-2 rounded bg-slate-950 border border-slate-800/80 flex items-center justify-between text-[11px]">
+              <span class="text-slate-400">Spread / Market</span>
+              <span id="orderbook-spread" class="text-amber-400 font-bold">$0.02 (0.01%)</span>
+            </div>
+
+            <!-- Bids (Green Buy Orders) -->
+            <div id="orderbook-bids" class="space-y-1"></div>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT PANEL: Canvas Chart Terminal & 100x Order Execution Panel -->
+        <div class="lg:col-span-8 flex flex-col space-y-4">
+          
+          <div class="glass-panel rounded-2xl border border-slate-800 p-4 lg:p-6 space-y-4">
+            
+            <!-- Active Coin Header & Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-slate-800/80">
+              
+              <div class="flex items-center gap-3.5">
+                <div id="active-coin-badge" class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-center text-amber-400 font-black font-mono text-2xl shadow-md glow-accent">
+                  ₿
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h3 id="chart-coin-title" class="text-xl font-black text-white font-mono">BTC / USD</h3>
+                    <span id="chart-coin-name" class="text-xs text-slate-400 font-normal">Bitcoin</span>
+                    <span id="chart-coin-change" class="text-xs px-2 py-0.5 rounded font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">+3.82%</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded font-mono font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/40">100x DESK</span>
+                  </div>
+                  <div class="text-2xl font-black font-mono text-white tracking-tight" id="chart-coin-price">
+                    $67,420.50
+                  </div>
+                </div>
+              </div>
+
+              <!-- Controls: Chart Style, Timeframes & Indicators -->
+              <div class="flex flex-wrap items-center gap-2">
+                
+                <!-- Chart Type Selector -->
+                <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex text-xs font-mono">
+                  <button onclick="setChartView('candles')" id="btn-view-candles" class="chart-view-btn px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/40 transition">Candles</button>
+                  <button onclick="setChartView('line')" id="btn-view-line" class="chart-view-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition">Line</button>
+                  <button onclick="setChartView('area')" id="btn-view-area" class="chart-view-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition">Area</button>
+                  <button onclick="setChartView('heikin')" id="btn-view-heikin" class="chart-view-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition">Heikin-Ashi</button>
+                </div>
+
+                <!-- Timeframe Selector -->
+                <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex text-xs font-mono">
+                  <button onclick="setTimeframe('1m')" class="tf-btn px-2 py-1 rounded text-slate-400 hover:text-white">1m</button>
+                  <button onclick="setTimeframe('5m')" class="tf-btn px-2 py-1 rounded text-slate-400 hover:text-white">5m</button>
+                  <button onclick="setTimeframe('15m')" class="tf-btn px-2 py-1 rounded text-amber-400 bg-slate-800 font-bold border border-slate-700">15m</button>
+                  <button onclick="setTimeframe('1h')" class="tf-btn px-2 py-1 rounded text-slate-400 hover:text-white">1h</button>
+                  <button onclick="setTimeframe('1d')" class="tf-btn px-2 py-1 rounded text-slate-400 hover:text-white">1D</button>
+                </div>
+
+                <!-- Indicator Toggles -->
+                <div class="flex items-center gap-1.5 text-xs font-mono">
+                  <button onclick="toggleIndicator('sma')" id="ind-sma-btn" class="px-2 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">SMA (20/50)</button>
+                  <button onclick="toggleIndicator('bb')" id="ind-bb-btn" class="px-2 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">Bollinger</button>
+                  <button onclick="toggleIndicator('rsi')" id="ind-rsi-btn" class="px-2 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">RSI (14)</button>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Interactive Canvas Chart Engine -->
+            <div class="relative w-full h-[400px] bg-slate-950/95 rounded-2xl border border-slate-800/90 overflow-hidden group">
+              <canvas id="cryptoChartCanvas" class="w-full h-full cursor-crosshair"></canvas>
+
+              <!-- Live Engine Watermark -->
+              <div class="absolute top-3 left-3 pointer-events-none flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-700/80 text-[10px] theme-accent-text font-mono flex items-center gap-1.5 shadow-lg">
+                  <span class="w-2 h-2 rounded-full theme-accent-bg animate-ping"></span> 60 FPS 100x REALTIME ENGINE
+                </span>
+              </div>
+
+              <!-- Tooltip Canvas Overlay -->
+              <div id="chart-tooltip" class="absolute hidden pointer-events-none bg-slate-900/95 border border-amber-500/40 p-3 rounded-xl text-xs font-mono text-slate-200 shadow-2xl backdrop-blur-md z-20 space-y-1">
+                <div id="tooltip-time" class="text-[10px] text-slate-400 border-b border-slate-800 pb-1"></div>
+                <div id="tooltip-price" class="theme-accent-text font-bold text-sm"></div>
+                <div id="tooltip-ohlc" class="text-[10px] space-y-0.5 text-slate-300"></div>
+              </div>
+            </div>
+
+            <!-- ================= BUY / SELL 100x LEVERAGE ORDER DOCK ================= -->
+            <div class="p-5 rounded-2xl bg-slate-950/90 border border-slate-800 space-y-4 font-mono">
+              
+              <!-- Dock Header -->
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3 text-xs">
+                <div class="flex items-center gap-2">
+                  <i class="fa-solid fa-rocket text-amber-400 text-sm"></i>
+                  <span class="font-extrabold text-white text-sm uppercase tracking-wide">100x Instant Trade Desk</span>
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="text-slate-400">Available Cash: <strong id="trade-avail-bal" class="text-amber-400 font-extrabold">$10,000.00</strong></span>
+                  <span class="text-slate-400">Max Leverage: <strong class="text-amber-400 font-black">100x</strong></span>
+                </div>
+              </div>
+
+              <!-- Buy / Sell Order Inputs Form -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 text-xs">
+                
+                <!-- Col 1: Order Direction (BUY / SHORT) -->
+                <div class="lg:col-span-3 space-y-1.5">
+                  <label class="text-[10px] text-slate-400 uppercase font-semibold">Trade Side</label>
+                  <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
+                    <button onclick="setTradeSide('buy')" id="btn-side-buy" class="flex-1 py-2 rounded-lg bg-emerald-500 text-slate-950 font-black text-center shadow-md transition text-xs">
+                      <i class="fa-solid fa-circle-arrow-up mr-1"></i> BUY / LONG
+                    </button>
+                    <button onclick="setTradeSide('sell')" id="btn-side-sell" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white font-bold text-center transition text-xs">
+                      <i class="fa-solid fa-circle-arrow-down mr-1"></i> SELL / SHORT
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Col 2: Margin Investment Amount ($) -->
+                <div class="lg:col-span-3 space-y-1.5">
+                  <div class="flex justify-between items-center text-[10px]">
+                    <label class="text-slate-400 uppercase font-semibold">Margin Amount ($)</label>
+                    <span id="margin-calc-hint" class="text-slate-500">25% = $2,500</span>
+                  </div>
+                  <div class="relative">
+                    <span class="absolute left-3 top-2.5 text-slate-500 font-bold">$</span>
+                    <input type="number" id="trade-amount-input" oninput="updateOrderCalculations()" value="1000" min="10" max="100000" class="w-full bg-slate-900 border border-slate-800 rounded-xl pl-7 pr-3 py-2 text-slate-100 font-bold focus:outline-none focus:border-amber-500 text-sm">
+                  </div>
+                  <!-- Quick Percentage Buttons -->
+                  <div class="flex space-x-1 pt-1 text-[10px]">
+                    <button onclick="setMarginPct(0.1)" class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400">10%</button>
+                    <button onclick="setMarginPct(0.25)" class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400">25%</button>
+                    <button onclick="setMarginPct(0.50)" class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400">50%</button>
+                    <button onclick="setMarginPct(1.0)" class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-amber-400 font-bold">MAX</button>
+                  </div>
+                </div>
+
+                <!-- Col 3: Leverage Selector & Multiplier Slider (1x to 100x) -->
+                <div class="lg:col-span-3 space-y-1.5">
+                  <div class="flex justify-between items-center text-[10px]">
+                    <label class="text-slate-400 uppercase font-semibold">Leverage Multiplier</label>
+                    <span id="leverage-display-val" class="text-amber-400 font-black text-xs">100x ULTRA</span>
+                  </div>
+                  <select id="trade-leverage-select" onchange="onLeverageSelectChange()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-amber-300 font-black focus:outline-none focus:border-amber-500 text-xs">
+                    <option value="1">1x Spot (No Leverage)</option>
+                    <option value="5">5x Leverage</option>
+                    <option value="10">10x Leverage</option>
+                    <option value="25">25x High Margin</option>
+                    <option value="50">50x Extreme Margin</option>
+                    <option value="100" selected>100x ULTRA LEVERAGE 🚀</option>
+                  </select>
+                  <input type="range" id="leverage-slider" min="1" max="100" value="100" oninput="onLeverageSliderInput(this.value)" class="w-full accent-amber-500 cursor-pointer h-1.5 bg-slate-900 rounded-lg">
+                </div>
+
+                <!-- Col 4: Execute Order Button & Est Liquidation -->
+                <div class="lg:col-span-3 flex flex-col justify-end space-y-2">
+                  <button onclick="executePaperTrade()" id="btn-execute-trade" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 text-slate-950 font-black text-sm tracking-wider uppercase hover:brightness-110 active:scale-95 transition shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-bolt text-lg"></i> EXECUTE 100x ORDER
+                  </button>
+                </div>
+
+              </div>
+
+              <!-- Order Calculations & Risk Preview Bar -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3 p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px]">
+                <div>
+                  <span class="text-slate-500 block">Total Position Value</span>
+                  <span id="calc-position-val" class="text-white font-extrabold text-xs">$100,000.00</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block">Quantity (Tokens)</span>
+                  <span id="calc-token-qty" class="text-amber-300 font-extrabold text-xs">1.4831 BTC</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block">Est. Liquidation Price</span>
+                  <span id="calc-liq-price" class="text-red-400 font-extrabold text-xs">$66,812.20</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block">Est. Profit (+10% move)</span>
+                  <span id="calc-est-pnl" class="text-emerald-400 font-extrabold text-xs">+$10,000.00 (+1000%)</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- PORTFOLIO MANAGER & LIVE ACTIVE POSITIONS TABLE                     -->
+    <!-- ==================================================================== -->
+    <section id="positions-module" class="scroll-mt-20 space-y-4 pt-6 border-t border-slate-800/80">
+      
+      <div class="flex flex-wrap items-center justify-between gap-2 border-l-4 border-emerald-500 pl-3 py-1 font-mono">
+        <div>
+          <h2 class="text-xl font-black tracking-wide text-white flex items-center gap-2">
+            <span>ACTIVE 100x POSITIONS & TRADE HISTORY</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40" id="active-pos-badge">0 OPEN</span>
+          </h2>
+          <p class="text-xs text-slate-400">Live mark prices, unrealized profit & loss tick updates, liquidation warnings and 1-click market close</p>
+        </div>
+        <button onclick="closeAllPositions()" class="px-3.5 py-1.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 border border-red-500/40 text-red-400 text-xs font-bold transition flex items-center gap-2">
+          <i class="fa-solid fa-fire text-red-400"></i> Close All Positions
+        </button>
+      </div>
+
+      <!-- Active Positions Table Card -->
+      <div class="glass-panel rounded-2xl border border-slate-800 p-4 font-mono text-xs space-y-3">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-500 text-[10px] uppercase">
+                <th class="pb-2 pl-2">Market / Asset</th>
+                <th class="pb-2">Side & Leverage</th>
+                <th class="pb-2">Margin</th>
+                <th class="pb-2">Position Size</th>
+                <th class="pb-2">Entry Price</th>
+                <th class="pb-2">Mark Price</th>
+                <th class="pb-2">Liq. Price</th>
+                <th class="pb-2">Unrealized PnL ($ / %)</th>
+                <th class="pb-2 text-right pr-2">Action</th>
+              </tr>
+            </thead>
+            <tbody id="active-positions-tbody" class="divide-y divide-slate-800/60">
+              <!-- Dynamically populated rows -->
+              <tr id="no-positions-row">
+                <td colspan="9" class="py-8 text-center text-slate-500 italic">
+                  <i class="fa-solid fa-box-open text-2xl mb-2 block text-slate-600"></i>
+                  No active 100x positions open. Choose a coin, set margin and leverage above, then click EXECUTE ORDER!
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- MODULE 2: SUNS SCHEDULE, PLAYER PROPS & NBA COURT VISUALIZER          -->
+    <!-- ==================================================================== -->
+    <section id="sports-module" class="scroll-mt-20 space-y-4 pt-6 border-t border-slate-800/80">
+      
+      <!-- Module Title Header -->
+      <div class="flex flex-wrap items-center justify-between gap-2 border-l-4 border-amber-500 pl-3 py-1">
+        <div>
+          <h2 class="text-xl font-black tracking-wide text-white flex items-center gap-2 font-mono">
+            <span>PHOENIX SUNS HUB & PROPS MARKETPLACE</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-normal">MODULE 2</span>
+          </h2>
+          <p class="text-xs text-slate-400">Matchup intel, interactive prop builder, 100x payout slip & NBA court shot chart engine</p>
+        </div>
+        <div class="text-xs text-slate-400 font-mono flex items-center gap-2">
+          <i class="fa-solid fa-basketball text-amber-400"></i>
+          <span>GAMEDAY MATCHUP: <strong class="text-emerald-400 font-bold">SUNS VS WARRIORS</strong></span>
+        </div>
+      </div>
+
+      <!-- Main Grid Layout (4 Cols Left, 8 Cols Right) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- LEFT PANEL: Matchup Banner, Player Props & Live Bet Slip -->
+        <div class="lg:col-span-4 flex flex-col space-y-5">
+          
+          <!-- Live Game Matchup Card -->
+          <div class="bg-gradient-to-br from-purple-950/70 via-slate-900 to-amber-950/70 p-4 rounded-2xl border border-amber-500/30 shadow-xl space-y-3">
+            
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="text-amber-400 font-bold flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> Q3 04:12 LIVE
+              </span>
+              <span class="px-2 py-0.5 rounded bg-slate-900/80 border border-slate-700 text-slate-300 text-[10px]">FOOTPRINT CENTER</span>
+            </div>
+
+            <!-- Suns vs Warriors Scoreboard -->
+            <div class="flex items-center justify-between px-2 pt-1 font-mono">
+              
+              <!-- Suns -->
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-amber-500/20 border border-amber-500/50 flex items-center justify-center font-black text-amber-400 text-sm shadow-md">
+                  PHX
+                </div>
+                <div>
+                  <h4 class="text-base font-extrabold text-white">SUNS</h4>
+                  <span class="text-2xl font-black text-amber-400">88</span>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <span class="text-xs text-slate-500 font-bold">VS</span>
+                <div class="text-[10px] text-slate-400 font-mono">PHX -3.5</div>
+              </div>
+
+              <!-- Warriors -->
+              <div class="flex items-center gap-3 text-right">
+                <div>
+                  <h4 class="text-base font-extrabold text-white">GSW</h4>
+                  <span class="text-2xl font-black text-slate-200">82</span>
+                </div>
+                <div class="w-11 h-11 rounded-2xl bg-blue-500/20 border border-blue-500/50 flex items-center justify-center font-black text-blue-400 text-sm shadow-md">
+                  GSW
+                </div>
+              </div>
+
+            </div>
+
+            <div class="pt-2 border-t border-slate-800/80 flex justify-between text-[11px] font-mono text-slate-400">
+              <span>Devin Booker: <strong>26 PTS, 6 AST</strong></span>
+              <span>KD: <strong>22 PTS, 8 REB</strong></span>
+            </div>
+
+          </div>
+
+          <!-- Player Props Selector Cards -->
+          <div class="glass-panel rounded-2xl border border-slate-800 p-4 space-y-3 font-mono text-xs">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <h3 class="font-bold text-slate-200 uppercase flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-amber-400"></i> Suns Player Props
+              </h3>
+              <span class="text-[10px] text-amber-400">Up to 100x Parlays</span>
+            </div>
+
+            <div id="props-list-container" class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1">
+              <!-- Dynamically rendered prop cards -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT PANEL: Sports Bet Slip & NBA Court Visualizer -->
+        <div class="lg:col-span-8 flex flex-col space-y-4">
+          
+          <!-- NBA Shot Visualizer Section -->
+          <div id="shot-visualizer-section" class="glass-panel rounded-2xl border border-slate-800 p-4 lg:p-6 space-y-4">
+            
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3 font-mono">
+              <div>
+                <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-bullseye text-purple-400"></i> NBA Court Shot Chart Visualizer
+                </h3>
+                <p class="text-xs text-slate-400">Real-time Suns shooting spatial density, zone efficiency & heatmaps</p>
+              </div>
+
+              <!-- Player Shot Filter -->
+              <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+                <button onclick="setShotPlayer('booker')" id="btn-shot-booker" class="shot-player-btn px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">D. Booker</button>
+                <button onclick="setShotPlayer('durant')" id="btn-shot-durant" class="shot-player-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white">K. Durant</button>
+                <button onclick="setShotPlayer('beal')" id="btn-shot-beal" class="shot-player-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white">B. Beal</button>
+              </div>
+            </div>
+
+            <!-- Court Canvas Container -->
+            <div class="relative w-full h-[420px] bg-slate-950/95 rounded-2xl border border-slate-800 overflow-hidden flex items-center justify-center">
+              <canvas id="sunsCourtCanvas" class="w-full h-full cursor-crosshair"></canvas>
+
+              <!-- Court Stats Overlay -->
+              <div class="absolute bottom-3 left-3 bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl text-xs font-mono space-y-1 backdrop-blur-md">
+                <div class="text-[10px] text-slate-400 uppercase font-bold">Selected Player Metrics</div>
+                <div id="court-player-name" class="text-amber-400 font-extrabold">Devin Booker #1</div>
+                <div id="court-player-stats" class="text-slate-200">FG%: <strong>52.4%</strong> | 3PT%: <strong>41.2%</strong></div>
+              </div>
+            </div>
+
+            <!-- Sports Parlay Bet Slip Execution Dock -->
+            <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3 font-mono text-xs">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-slate-200 uppercase flex items-center gap-2">
+                  <i class="fa-solid fa-ticket text-amber-400"></i> Active Prop Parlay Slip
+                </span>
+                <span id="parlay-multiplier" class="text-amber-400 font-black">Multiplier: 1.0x</span>
+              </div>
+
+              <div id="parlay-items-container" class="space-y-1.5 text-slate-300">
+                <div class="text-slate-500 italic text-[11px]">Click 'OVER' or 'UNDER' on any Suns prop above to build a parlay bet!</div>
+              </div>
+
+              <div class="flex items-center gap-3 pt-2 border-t border-slate-800">
+                <div class="relative flex-1">
+                  <span class="absolute left-3 top-2 text-slate-500">$</span>
+                  <input type="number" id="sports-bet-amount" value="100" min="10" max="10000" class="w-full bg-slate-900 border border-slate-800 rounded-xl pl-7 pr-3 py-1.5 text-slate-200 focus:outline-none focus:border-amber-500">
+                </div>
+                <button onclick="placeSportsBet()" class="py-2 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black tracking-wider uppercase hover:opacity-90 transition shadow-lg shadow-amber-500/20">
+                  PLACE PROPS BET
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto border-t border-slate-800/80 glass-panel py-4 px-4 text-center font-mono text-xs text-slate-500">
+    <div class="max-w-[1920px] mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div>LANDON LANCE CYBER TERMINAL v3.5 // 100x LEVERAGE DESK & SUNS ANALYTICS</div>
+      <div class="text-emerald-400 flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> SYSTEM OK • SIMULATED PORTFOLIO
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= JAVASCRIPT LOGIC ENGINE ================= -->
+  <script>
+    /* ================= GLOBAL STATE ================= */
+    const state = {
+      cashBalance: 10000.00,
+      activePositions: [],
+      closedPositions: [],
+      sportsBets: [],
+      tradeSide: 'buy', // 'buy' or 'sell'
+      selectedLeverage: 100,
+      audioEnabled: false,
+      activeTheme: 'gold100x',
+      activeCoinKey: 'BTC',
+      chartView: 'candles', // 'candles', 'line', 'area', 'heikin'
+      timeframe: '15m',
+      indicators: { sma: false, bb: false, rsi: true },
+      shotPlayer: 'booker',
+      parlaySelections: [],
+      
+      // Supported Coins Database
+      coins: {
+        'BTC': { name: 'Bitcoin', symbol: 'BTC', price: 67420.50, change: 3.82, icon: '₿', category: 'l1', history: [] },
+        'ETH': { name: 'Ethereum', symbol: 'ETH', price: 3520.10, change: 2.15, icon: 'Ξ', category: 'l1', history: [] },
+        'SOL': { name: 'Solana', symbol: 'SOL', price: 154.80, change: 7.30, icon: '◎', category: 'l1', history: [] },
+        'CATE': { name: 'CateCoin', symbol: 'CATE', price: 0.00000452, change: 18.40, icon: '🐱', category: 'meme', history: [] },
+        'PEPE': { name: 'Pepe', symbol: 'PEPE', price: 0.00000980, change: 12.60, icon: '🐸', category: 'meme', history: [] },
+        'SUNS': { name: 'Phoenix Suns Token', symbol: 'SUNS', price: 12.45, change: 9.10, icon: '☀️', category: 'suns', history: [] },
+        'DOGE': { name: 'Dogecoin', symbol: 'DOGE', price: 0.1420, change: 5.40, icon: 'Ð', category: 'meme', history: [] },
+        'UNI': { name: 'Uniswap', symbol: 'UNI', price: 8.75, change: 1.80, icon: '🦄', category: 'defi', history: [] }
+      },
+
+      // Suns Player Props
+      sunsProps: [
+        { id: 'p1', player: 'Devin Booker', prop: 'Points', line: 28.5, overOdds: 1.85, underOdds: 1.95, hitRate: '82%' },
+        { id: 'p2', player: 'Kevin Durant', prop: 'Rebounds', line: 6.5, overOdds: 1.90, underOdds: 1.90, hitRate: '75%' },
+        { id: 'p3', player: 'Bradley Beal', prop: 'Assists', line: 5.5, overOdds: 2.05, underOdds: 1.80, hitRate: '68%' },
+        { id: 'p4', player: 'Jusuf Nurkic', prop: 'Double-Double', line: 0.5, overOdds: 2.10, underOdds: 1.75, hitRate: '60%' }
+      ]
+    };
+
+    /* ================= SYNTHESIZED WEB AUDIO ENGINE ================= */
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function toggleAudioFeedback() {
+      state.audioEnabled = !state.audioEnabled;
+      const btn = document.getElementById('audio-btn');
+      const icon = document.getElementById('audio-icon');
+      if (state.audioEnabled) {
+        btn.classList.add('text-amber-400');
+        icon.className = 'fa-solid fa-volume-high text-sm';
+        playAudioChime(880, 'sine', 0.15); // Confirmation chime
+      } else {
+        btn.classList.remove('text-amber-400');
+        icon.className = 'fa-solid fa-volume-xmark text-sm';
+      }
+    }
+
+    function playAudioChime(freq = 440, type = 'sine', duration = 0.1) {
+      if (!state.audioEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) { console.error(e); }
+    }
+
+    function playTradeSuccessSound() {
+      if (!state.audioEnabled) return;
+      playAudioChime(523.25, 'triangle', 0.1); // C5
+      setTimeout(() => playAudioChime(659.25, 'triangle', 0.1), 80); // E5
+      setTimeout(() => playAudioChime(783.99, 'triangle', 0.2), 160); // G5
+    }
+
+    /* ================= INITIALIZATION & DATA GEN ================= */
+    window.onload = function() {
+      generateHistoricalData();
+      renderTokenList();
+      renderOrderbook();
+      renderPropsList();
+      initChartCanvas();
+      initFearGreedCanvas();
+      initCourtCanvas();
+      updateHeaderPortfolioDisplay();
+      updateOrderCalculations();
+
+      // Start Real-Time Ticks Loop
+      setInterval(tickRealtimePrices, 1200);
+    };
+
+    function generateHistoricalData() {
+      Object.keys(state.coins).forEach(key => {
+        const coin = state.coins[key];
+        const basePrice = coin.price;
+        let current = basePrice * 0.95;
+        const history = [];
+
+        for (let i = 0; i < 40; i++) {
+          const changePct = (Math.random() - 0.48) * 0.03;
+          const open = current;
+          const close = open * (1 + changePct);
+          const high = Math.max(open, close) * (1 + Math.random() * 0.01);
+          const low = Math.min(open, close) * (1 - Math.random() * 0.01);
+          const vol = Math.floor(Math.random() * 5000) + 1000;
+          
+          history.push({ open, high, low, close, vol, time: i });
+          current = close;
+        }
+        coin.history = history;
+        coin.price = history[history.length - 1].close;
+      });
+    }
+
+    /* ================= REAL-TIME PRICE TICKER & POSITIONS UPDATER ================= */
+    function tickRealtimePrices() {
+      Object.keys(state.coins).forEach(key => {
+        const coin = state.coins[key];
+        const deltaPct = (Math.random() - 0.49) * 0.008; // fluctuate
+        const oldPrice = coin.price;
+        coin.price = Math.max(0.00000001, coin.price * (1 + deltaPct));
+
+        // Update candle
+        const lastCandle = coin.history[coin.history.length - 1];
+        lastCandle.close = coin.price;
+        if (coin.price > lastCandle.high) lastCandle.high = coin.price;
+        if (coin.price < lastCandle.low) lastCandle.low = coin.price;
+      });
+
+      // Update Active Coin Header
+      const activeCoin = state.coins[state.activeCoinKey];
+      document.getElementById('chart-coin-price').innerText = formatCurrency(activeCoin.price);
+
+      // Render updated canvas & orderbook
+      renderCryptoChart();
+      renderOrderbook();
+      renderTokenList(false); // update list without full recreate
+      updateActivePositionsPnL();
+      updateHeaderPortfolioDisplay();
+    }
+
+    /* ================= THEME SWITCHER ================= */
+    function setTheme(themeName) {
+      document.body.className = `theme-${themeName} min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950`;
+      state.activeTheme = themeName;
+      playAudioChime(600, 'sine', 0.08);
+      renderCryptoChart();
+      renderCourtCanvas();
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* ================= TOKEN SELECTION & FILTERS ================= */
+    function selectCoin(symbol) {
+      if (!state.coins[symbol]) return;
+      state.activeCoinKey = symbol;
+      const coin = state.coins[symbol];
+
+      document.getElementById('chart-coin-title').innerText = `${coin.symbol} / USD`;
+      document.getElementById('chart-coin-name').innerText = coin.name;
+      document.getElementById('chart-coin-price').innerText = formatCurrency(coin.price);
+      document.getElementById('active-coin-badge').innerText = coin.icon;
+
+      playAudioChime(700, 'sine', 0.08);
+      renderTokenList(false);
+      renderCryptoChart();
+      renderOrderbook();
+      updateOrderCalculations();
+    }
+
+    function renderTokenList(rebuild = true) {
+      const container = document.getElementById('token-list-container');
+      if (!container) return;
+
+      if (rebuild) {
+        container.innerHTML = '';
+      }
+
+      Object.keys(state.coins).forEach(key => {
+        const coin = state.coins[key];
+        const isSelected = key === state.activeCoinKey;
+        let card = document.getElementById(`token-card-${key}`);
+
+        if (!card) {
+          card = document.createElement('div');
+          card.id = `token-card-${key}`;
+          card.onclick = () => selectCoin(key);
+          container.appendChild(card);
+        }
+
+        const isPositive = coin.change >= 0;
+        card.className = `p-2.5 rounded-xl border transition cursor-pointer flex items-center justify-between ${
+          isSelected 
+            ? 'bg-slate-900 border-amber-500/60 shadow-md' 
+            : 'bg-slate-950/80 border-slate-800/80 hover:bg-slate-900 hover:border-slate-700'
+        }`;
+
+        card.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg ${isSelected ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-900 text-slate-300'} flex items-center justify-center font-bold text-sm">
+              ${coin.icon}
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="font-extrabold text-white text-xs">${coin.symbol}</span>
+                <span class="text-[9px] px-1 bg-amber-500/20 text-amber-300 rounded font-bold">100x</span>
+              </div>
+              <span class="text-[10px] text-slate-400">${coin.name}</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="font-extrabold text-white text-xs">${formatCurrency(coin.price)}</div>
+            <div class="text-[10px] font-bold ${isPositive ? 'text-emerald-400' : 'text-red-400'}">
+              ${isPositive ? '+' : ''}${coin.change.toFixed(2)}%
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function filterTokens(cat) {
+      const container = document.getElementById('token-list-container');
+      const cards = container.children;
+      Array.from(cards).forEach(card => {
+        const symbol = card.id.replace('token-card-', '');
+        const coin = state.coins[symbol];
+        if (cat === 'all' || coin.category === cat) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      playAudioChime(500, 'sine', 0.05);
+    }
+
+    function filterTokensBySearch() {
+      const query = document.getElementById('token-search-input').value.toLowerCase();
+      Object.keys(state.coins).forEach(key => {
+        const coin = state.coins[key];
+        const card = document.getElementById(`token-card-${key}`);
+        if (card) {
+          if (coin.symbol.toLowerCase().includes(query) || coin.name.toLowerCase().includes(query)) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    /* ================= LIVE ORDERBOOK RENDERER ================= */
+    function renderOrderbook() {
+      const activeCoin = state.coins[state.activeCoinKey];
+      const p = activeCoin.price;
+      const asksContainer = document.getElementById('orderbook-asks');
+      const bidsContainer = document.getElementById('orderbook-bids');
+      if (!asksContainer || !bidsContainer) return;
+
+      asksContainer.innerHTML = '';
+      bidsContainer.innerHTML = '';
+
+      // Generate 4 Ask levels (Red)
+      for (let i = 4; i >= 1; i--) {
+        const askPrice = p * (1 + i * 0.0008);
+        const size = (Math.random() * 2 + 0.1).toFixed(2);
+        const depthPct = Math.min(100, Math.floor(size * 30));
+
+        const row = document.createElement('div');
+        row.className = 'relative grid grid-cols-3 text-[11px] py-0.5 px-1 rounded overflow-hidden cursor-pointer hover:bg-red-950/40';
+        row.innerHTML = `
+          <div class="absolute right-0 top-0 bottom-0 bg-red-500/15 depth-bar" style="width: ${depthPct}%"></div>
+          <span class="text-red-400 font-bold z-10">${formatCurrency(askPrice)}</span>
+          <span class="text-right text-slate-300 z-10">${size}</span>
+          <span class="text-right text-slate-500 z-10">${(askPrice * size).toFixed(0)}</span>
+        `;
+        asksContainer.appendChild(row);
+      }
+
+      // Spread
+      const spreadVal = p * 0.0008;
+      document.getElementById('orderbook-spread').innerText = `${formatCurrency(spreadVal)} (0.04%)`;
+
+      // Generate 4 Bid levels (Green)
+      for (let i = 1; i <= 4; i++) {
+        const bidPrice = p * (1 - i * 0.0008);
+        const size = (Math.random() * 2 + 0.1).toFixed(2);
+        const depthPct = Math.min(100, Math.floor(size * 30));
+
+        const row = document.createElement('div');
+        row.className = 'relative grid grid-cols-3 text-[11px] py-0.5 px-1 rounded overflow-hidden cursor-pointer hover:bg-emerald-950/40';
+        row.innerHTML = `
+          <div class="absolute right-0 top-0 bottom-0 bg-emerald-500/15 depth-bar" style="width: ${depthPct}%"></div>
+          <span class="text-emerald-400 font-bold z-10">${formatCurrency(bidPrice)}</span>
+          <span class="text-right text-slate-300 z-10">${size}</span>
+          <span class="text-right text-slate-500 z-10">${(bidPrice * size).toFixed(0)}</span>
+        `;
+        bidsContainer.appendChild(row);
+      }
+    }
+
+    /* ================= 100x TRADING ENGINE LOGIC ================= */
+    function setTradeSide(side) {
+      state.tradeSide = side;
+      const btnBuy = document.getElementById('btn-side-buy');
+      const btnSell = document.getElementById('btn-side-sell');
+      const btnExec = document.getElementById('btn-execute-trade');
+
+      if (side === 'buy') {
+        btnBuy.className = 'flex-1 py-2 rounded-lg bg-emerald-500 text-slate-950 font-black text-center shadow-md transition text-xs';
+        btnSell.className = 'flex-1 py-2 rounded-lg text-slate-400 hover:text-white font-bold text-center transition text-xs';
+        btnExec.className = 'w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600 text-slate-950 font-black text-sm tracking-wider uppercase hover:brightness-110 active:scale-95 transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2';
+        btnExec.innerHTML = `<i class="fa-solid fa-circle-arrow-up text-lg"></i> EXECUTE 100x BUY / LONG`;
+      } else {
+        btnBuy.className = 'flex-1 py-2 rounded-lg text-slate-400 hover:text-white font-bold text-center transition text-xs';
+        btnSell.className = 'flex-1 py-2 rounded-lg bg-red-500 text-slate-950 font-black text-center shadow-md transition text-xs';
+        btnExec.className = 'w-full py-3 px-4 rounded-xl bg-gradient-to-r from-red-500 via-rose-400 to-red-600 text-slate-950 font-black text-sm tracking-wider uppercase hover:brightness-110 active:scale-95 transition shadow-lg shadow-red-500/20 flex items-center justify-center gap-2';
+        btnExec.innerHTML = `<i class="fa-solid fa-circle-arrow-down text-lg"></i> EXECUTE 100x SELL / SHORT`;
+      }
+      playAudioChime(650, 'sine', 0.05);
+      updateOrderCalculations();
+    }
+
+    function onLeverageSelectChange() {
+      const select = document.getElementById('trade-leverage-select');
+      const val = parseInt(select.value);
+      state.selectedLeverage = val;
+      document.getElementById('leverage-slider').value = val;
+      document.getElementById('leverage-display-val').innerText = `${val}x ${val === 100 ? 'ULTRA' : 'LEVERAGE'}`;
+      updateOrderCalculations();
+    }
+
+    function onLeverageSliderInput(val) {
+      val = parseInt(val);
+      state.selectedLeverage = val;
+      document.getElementById('trade-leverage-select').value = val;
+      document.getElementById('leverage-display-val').innerText = `${val}x ${val === 100 ? 'ULTRA' : 'LEVERAGE'}`;
+      updateOrderCalculations();
+    }
+
+    function setMarginPct(pct) {
+      const amount = Math.floor(state.cashBalance * pct);
+      document.getElementById('trade-amount-input').value = amount;
+      updateOrderCalculations();
+    }
+
+    function updateOrderCalculations() {
+      const coin = state.coins[state.activeCoinKey];
+      const margin = parseFloat(document.getElementById('trade-amount-input').value) || 0;
+      const leverage = state.selectedLeverage;
+      const positionVal = margin * leverage;
+      const qty = coin.price > 0 ? (positionVal / coin.price) : 0;
+
+      // Estimated Liquidation Price
+      let liqPrice = 0;
+      if (state.tradeSide === 'buy') {
+        liqPrice = coin.price * (1 - (0.9 / leverage));
+      } else {
+        liqPrice = coin.price * (1 + (0.9 / leverage));
+      }
+
+      const estPnl = positionVal * 0.10; // 10% underlying move
+
+      document.getElementById('calc-position-val').innerText = formatCurrency(positionVal);
+      document.getElementById('calc-token-qty').innerText = `${qty.toFixed(4)} ${coin.symbol}`;
+      document.getElementById('calc-liq-price').innerText = formatCurrency(Math.max(0, liqPrice));
+      document.getElementById('calc-est-pnl').innerText = `+${formatCurrency(estPnl)} (+${leverage * 10}%)`;
+    }
+
+    function executePaperTrade() {
+      const coin = state.coins[state.activeCoinKey];
+      const margin = parseFloat(document.getElementById('trade-amount-input').value) || 0;
+      const leverage = state.selectedLeverage;
+
+      if (margin <= 0) {
+        alert('Please enter a valid margin amount!');
+        return;
+      }
+
+      if (margin > state.cashBalance) {
+        alert('Insufficient cash balance! Reset your balance or decrease margin amount.');
+        return;
+      }
+
+      // Deduct cash balance for margin
+      state.cashBalance -= margin;
+
+      const positionVal = margin * leverage;
+      const qty = positionVal / coin.price;
+      const entryPrice = coin.price;
+
+      let liqPrice = 0;
+      if (state.tradeSide === 'buy') {
+        liqPrice = entryPrice * (1 - (0.9 / leverage));
+      } else {
+        liqPrice = entryPrice * (1 + (0.9 / leverage));
+      }
+
+      const newPos = {
+        id: 'pos_' + Date.now(),
+        symbol: coin.symbol,
+        name: coin.name,
+        side: state.tradeSide,
+        leverage: leverage,
+        margin: margin,
+        sizeVal: positionVal,
+        qty: qty,
+        entryPrice: entryPrice,
+        markPrice: entryPrice,
+        liqPrice: Math.max(0, liqPrice),
+        unrealizedPnl: 0,
+        unrealizedPnlPct: 0
+      };
+
+      state.activePositions.unshift(newPos);
+      playTradeSuccessSound();
+      updateHeaderPortfolioDisplay();
+      renderActivePositionsTable();
+      scrollToSection('positions-module');
+    }
+
+    /* ================= POSITIONS & PNL MANAGEMENT ================= */
+    function updateActivePositionsPnL() {
+      let totalUnrealized = 0;
+      let totalUsedMargin = 0;
+
+      state.activePositions.forEach((pos, index) => {
+        const coin = state.coins[pos.symbol];
+        if (!coin) return;
+
+        pos.markPrice = coin.price;
+        totalUsedMargin += pos.margin;
+
+        let pnlPct = 0;
+        if (pos.side === 'buy') {
+          pnlPct = ((pos.markPrice - pos.entryPrice) / pos.entryPrice) * pos.leverage;
+        } else {
+          pnlPct = ((pos.entryPrice - pos.markPrice) / pos.entryPrice) * pos.leverage;
+        }
+
+        pos.unrealizedPnl = pos.margin * pnlPct;
+        pos.unrealizedPnlPct = pnlPct * 100;
+
+        totalUnrealized += pos.unrealizedPnl;
+
+        // Liquidation Check
+        if ((pos.side === 'buy' && pos.markPrice <= pos.liqPrice) || 
+            (pos.side === 'sell' && pos.markPrice >= pos.liqPrice)) {
+          // Liquidate position
+          closePosition(pos.id, true);
+        }
+      });
+
+      renderActivePositionsTable();
+    }
+
+    function renderActivePositionsTable() {
+      const tbody = document.getElementById('active-positions-tbody');
+      if (!tbody) return;
+
+      document.getElementById('active-pos-badge').innerText = `${state.activePositions.length} OPEN`;
+      document.getElementById('nav-pos-count').innerText = state.activePositions.length;
+
+      if (state.activePositions.length === 0) {
+        tbody.innerHTML = `
+          <tr id="no-positions-row">
+            <td colspan="9" class="py-8 text-center text-slate-500 italic">
+              <i class="fa-solid fa-box-open text-2xl mb-2 block text-slate-600"></i>
+              No active 100x positions open. Choose a coin, set margin and leverage above, then click EXECUTE ORDER!
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = '';
+      state.activePositions.forEach(pos => {
+        const isPos = pos.unrealizedPnl >= 0;
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-slate-900/60 transition';
+        row.innerHTML = `
+          <td class="py-3 pl-2 font-bold text-white flex items-center gap-2">
+            <span class="w-6 h-6 rounded bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-400 text-xs">
+              ${state.coins[pos.symbol] ? state.coins[pos.symbol].icon : '🪙'}
+            </span>
+            ${pos.symbol}
+          </td>
+          <td class="py-3">
+            <span class="px-2 py-0.5 rounded font-bold text-[10px] ${pos.side === 'buy' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}">
+              ${pos.side.toUpperCase()} ${pos.leverage}x
+            </span>
+          </td>
+          <td class="py-3 text-slate-200 font-bold">${formatCurrency(pos.margin)}</td>
+          <td class="py-3 text-slate-300">${formatCurrency(pos.sizeVal)}</td>
+          <td class="py-3 text-slate-400">${formatCurrency(pos.entryPrice)}</td>
+          <td class="py-3 text-amber-300 font-bold">${formatCurrency(pos.markPrice)}</td>
+          <td class="py-3 text-red-400">${formatCurrency(pos.liqPrice)}</td>
+          <td class="py-3 font-extrabold ${isPos ? 'text-emerald-400' : 'text-red-400'}">
+            ${isPos ? '+' : ''}${formatCurrency(pos.unrealizedPnl)} (${isPos ? '+' : ''}${pos.unrealizedPnlPct.toFixed(2)}%)
+          </td>
+          <td class="py-3 pr-2 text-right">
+            <button onclick="closePosition('${pos.id}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-[10px] font-bold transition">
+              Close Market
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function closePosition(id, isLiquidation = false) {
+      const idx = state.activePositions.findIndex(p => p.id === id);
+      if (idx === -1) return;
+
+      const pos = state.activePositions[idx];
+      
+      if (isLiquidation) {
+        // Return 0 margin on liquidation
+        playAudioChime(200, 'sawtooth', 0.3);
+      } else {
+        // Return margin + realized PnL
+        const payout = pos.margin + pos.unrealizedPnl;
+        state.cashBalance += Math.max(0, payout);
+        playAudioChime( pos.unrealizedPnl >= 0 ? 800 : 300, 'sine', 0.2);
+      }
+
+      state.activePositions.splice(idx, 1);
+      updateHeaderPortfolioDisplay();
+      renderActivePositionsTable();
+    }
+
+    function closeAllPositions() {
+      if (state.activePositions.length === 0) return;
+      [...state.activePositions].forEach(p => closePosition(p.id));
+    }
+
+    function resetPaperBalance() {
+      if (confirm('Reset virtual balance back to $10,000.00? All active positions will be cleared.')) {
+        state.cashBalance = 10000.00;
+        state.activePositions = [];
+        updateHeaderPortfolioDisplay();
+        renderActivePositionsTable();
+        playAudioChime(900, 'sine', 0.15);
+      }
+    }
+
+    function updateHeaderPortfolioDisplay() {
+      let totalUnrealized = 0;
+      let usedMargin = 0;
+
+      state.activePositions.forEach(p => {
+        totalUnrealized += p.unrealizedPnl;
+        usedMargin += p.margin;
+      });
+
+      const totalEquity = state.cashBalance + usedMargin + totalUnrealized;
+
+      document.getElementById('paper-balance-display').innerText = formatCurrency(state.cashBalance);
+      document.getElementById('portfolio-equity-display').innerText = formatCurrency(totalEquity);
+      document.getElementById('trade-avail-bal').innerText = formatCurrency(state.cashBalance);
+      document.getElementById('used-margin-display').innerText = formatCurrency(usedMargin);
+
+      const pnlEl = document.getElementById('unrealized-pnl-display');
+      const isPos = totalUnrealized >= 0;
+      pnlEl.className = `font-bold text-xs ${isPos ? 'text-emerald-400' : 'text-red-400'}`;
+      pnlEl.innerText = `${isPos ? '+' : ''}${formatCurrency(totalUnrealized)}`;
+
+      document.getElementById('active-positions-count').innerText = `${state.activePositions.length} Trade / ${state.sportsBets.length} Bets`;
+    }
+
+    /* ================= 60 FPS INTERACTIVE CANVAS CHART ENGINE ================= */
+    let chartCanvas, chartCtx;
+
+    function initChartCanvas() {
+      chartCanvas = document.getElementById('cryptoChartCanvas');
+      if (!chartCanvas) return;
+
+      const resize = () => {
+        const rect = chartCanvas.parentElement.getBoundingClientRect();
+        chartCanvas.width = rect.width;
+        chartCanvas.height = rect.height;
+        renderCryptoChart();
+      };
+      window.addEventListener('resize', resize);
+      resize();
+
+      // Mousemove tooltip listener
+      chartCanvas.addEventListener('mousemove', (e) => {
+        const rect = chartCanvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const coin = state.coins[state.activeCoinKey];
+        if (!coin || !coin.history.length) return;
+
+        const candles = coin.history;
+        const padding = 40;
+        const chartW = chartCanvas.width - padding;
+        const candleW = chartW / candles.length;
+        const idx = Math.floor(mouseX / candleW);
+
+        const tooltip = document.getElementById('chart-tooltip');
+        if (idx >= 0 && idx < candles.length) {
+          const c = candles[idx];
+          tooltip.style.left = `${mouseX + 15}px`;
+          tooltip.style.top = `40px`;
+          tooltip.classList.remove('hidden');
+
+          document.getElementById('tooltip-time').innerText = `T-MIN ${candles.length - idx} (15m)`;
+          document.getElementById('tooltip-price').innerText = formatCurrency(c.close);
+          document.getElementById('tooltip-ohlc').innerHTML = `
+            O: ${formatCurrency(c.open)} | H: ${formatCurrency(c.high)}<br>
+            L: ${formatCurrency(c.low)} | C: ${formatCurrency(c.close)}
+          `;
+        } else {
+          tooltip.classList.add('hidden');
+        }
+      });
+
+      chartCanvas.addEventListener('mouseleave', () => {
+        document.getElementById('chart-tooltip').classList.add('hidden');
+      });
+    }
+
+    function renderCryptoChart() {
+      if (!chartCanvas) return;
+      chartCtx = chartCanvas.getContext('2d');
+      const w = chartCanvas.width;
+      const h = chartCanvas.height;
+      chartCtx.clearRect(0, 0, w, h);
+
+      const coin = state.coins[state.activeCoinKey];
+      if (!coin || !coin.history.length) return;
+
+      const candles = coin.history;
+      const padding = 40;
+      const chartW = w - padding;
+      const chartH = h - padding;
+
+      // Min/Max Price calculation
+      let minP = Math.min(...candles.map(c => c.low));
+      let maxP = Math.max(...candles.map(c => c.high));
+      if (minP === maxP) { minP *= 0.99; maxP *= 1.01; }
+
+      const candleW = chartW / candles.length;
+
+      // Draw Grid lines
+      chartCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      chartCtx.lineWidth = 1;
+      for (let i = 1; i <= 4; i++) {
+        const y = (chartH / 5) * i;
+        chartCtx.beginPath();
+        chartCtx.moveTo(0, y);
+        chartCtx.lineTo(chartW, y);
+        chartCtx.stroke();
+
+        // Price label on right
+        const pVal = maxP - (i / 5) * (maxP - minP);
+        chartCtx.fillStyle = '#64748b';
+        chartCtx.font = '10px JetBrains Mono';
+        chartCtx.fillText(formatCurrency(pVal), chartW + 2, y + 3);
+      }
+
+      // Render Candles or Chart Type
+      if (state.chartView === 'candles' || state.chartView === 'heikin') {
+        candles.forEach((c, i) => {
+          const x = i * candleW + candleW / 2;
+          const openY = chartH - ((c.open - minP) / (maxP - minP)) * chartH;
+          const closeY = chartH - ((c.close - minP) / (maxP - minP)) * chartH;
+          const highY = chartH - ((c.high - minP) / (maxP - minP)) * chartH;
+          const lowY = chartH - ((c.low - minP) / (maxP - minP)) * chartH;
+
+          const isGreen = c.close >= c.open;
+          const color = isGreen ? '#10b981' : '#ef4444';
+
+          // Wick
+          chartCtx.strokeStyle = color;
+          chartCtx.lineWidth = 1.5;
+          chartCtx.beginPath();
+          chartCtx.moveTo(x, highY);
+          chartCtx.lineTo(x, lowY);
+          chartCtx.stroke();
+
+          // Body
+          chartCtx.fillStyle = color;
+          const bodyY = Math.min(openY, closeY);
+          const bodyH = Math.max(2, Math.abs(closeY - openY));
+          chartCtx.fillRect(x - candleW * 0.35, bodyY, candleW * 0.7, bodyH);
+        });
+      } else if (state.chartView === 'line' || state.chartView === 'area') {
+        chartCtx.beginPath();
+        candles.forEach((c, i) => {
+          const x = i * candleW + candleW / 2;
+          const y = chartH - ((c.close - minP) / (maxP - minP)) * chartH;
+          if (i === 0) chartCtx.moveTo(x, y);
+          else chartCtx.lineTo(x, y);
+        });
+
+        chartCtx.strokeStyle = '#eab308';
+        chartCtx.lineWidth = 2.5;
+        chartCtx.stroke();
+
+        if (state.chartView === 'area') {
+          const lastX = (candles.length - 1) * candleW + candleW / 2;
+          chartCtx.lineTo(lastX, chartH);
+          chartCtx.lineTo(candleW / 2, chartH);
+          chartCtx.closePath();
+
+          const grad = chartCtx.createLinearGradient(0, 0, 0, chartH);
+          grad.addColorStop(0, 'rgba(234, 179, 8, 0.35)');
+          grad.addColorStop(1, 'rgba(234, 179, 8, 0.0)');
+          chartCtx.fillStyle = grad;
+          chartCtx.fill();
+        }
+      }
+
+      // SMA Indicator Overlay
+      if (state.indicators.sma) {
+        chartCtx.beginPath();
+        chartCtx.strokeStyle = '#00f3ff';
+        chartCtx.lineWidth = 1.5;
+        for (let i = 5; i < candles.length; i++) {
+          const slice = candles.slice(i - 5, i);
+          const avg = slice.reduce((a, b) => a + b.close, 0) / 5;
+          const x = i * candleW + candleW / 2;
+          const y = chartH - ((avg - minP) / (maxP - minP)) * chartH;
+          if (i === 5) chartCtx.moveTo(x, y);
+          else chartCtx.lineTo(x, y);
+        }
+        chartCtx.stroke();
+      }
+    }
+
+    function setChartView(view) {
+      state.chartView = view;
+      document.querySelectorAll('.chart-view-btn').forEach(btn => {
+        btn.className = 'chart-view-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition';
+      });
+      const activeBtn = document.getElementById(`btn-view-${view}`);
+      if (activeBtn) activeBtn.className = 'chart-view-btn px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/40 transition';
+      playAudioChime(600, 'sine', 0.05);
+      renderCryptoChart();
+    }
+
+    function setTimeframe(tf) {
+      state.timeframe = tf;
+      playAudioChime(650, 'sine', 0.05);
+      renderCryptoChart();
+    }
+
+    function toggleIndicator(ind) {
+      state.indicators[ind] = !state.indicators[ind];
+      const btn = document.getElementById(`ind-${ind}-btn`);
+      if (state.indicators[ind]) {
+        btn.className = 'px-2 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold';
+      } else {
+        btn.className = 'px-2 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white';
+      }
+      playAudioChime(700, 'sine', 0.05);
+      renderCryptoChart();
+    }
+
+    /* ================= FEAR & GREED DIAL CANVAS ================= */
+    function initFearGreedCanvas() {
+      const cvs = document.getElementById('fearGreedCanvas');
+      if (!cvs) return;
+      cvs.width = 40;
+      cvs.height = 40;
+      const ctx = cvs.getContext('2d');
+
+      // Outer Arc
+      ctx.beginPath();
+      ctx.arc(20, 20, 16, Math.PI * 0.8, Math.PI * 2.2);
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // Value Arc
+      ctx.beginPath();
+      ctx.arc(20, 20, 16, Math.PI * 0.8, Math.PI * 1.9);
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+    }
+
+    /* ================= SUNS SPORTS PROPS & PARLAY BUILDER ================= */
+    function renderPropsList() {
+      const container = document.getElementById('props-list-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      state.sunsProps.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2';
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-extrabold text-white">${item.player}</span>
+            <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-500/30">Hit Rate: ${item.hitRate}</span>
+          </div>
+          <div class="text-slate-400 text-[11px]">${item.prop}: <strong class="text-amber-400">${item.line}</strong></div>
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button onclick="addPropToParlay('${item.id}', 'OVER')" class="py-1 px-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-400 font-bold text-[11px] flex items-center justify-between transition">
+              OVER <span class="text-white">${item.overOdds}x</span>
+            </button>
+            <button onclick="addPropToParlay('${item.id}', 'UNDER')" class="py-1 px-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/40 text-red-400 font-bold text-[11px] flex items-center justify-between transition">
+              UNDER <span class="text-white">${item.underOdds}x</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function addPropToParlay(propId, choice) {
+      const prop = state.sunsProps.find(p => p.id === propId);
+      if (!prop) return;
+
+      const odds = choice === 'OVER' ? prop.overOdds : prop.underOdds;
+      state.parlaySelections = state.parlaySelections.filter(p => p.id !== propId);
+      state.parlaySelections.push({ ...prop, choice, odds });
+
+      playAudioChime(750, 'sine', 0.1);
+      renderParlaySlip();
+    }
+
+    function renderParlaySlip() {
+      const container = document.getElementById('parlay-items-container');
+      if (!container) return;
+
+      if (state.parlaySelections.length === 0) {
+        container.innerHTML = `<div class="text-slate-500 italic text-[11px]">Click 'OVER' or 'UNDER' on any Suns prop above to build a parlay bet!</div>`;
+        document.getElementById('parlay-multiplier').innerText = `Multiplier: 1.0x`;
+        return;
+      }
+
+      let totalMultiplier = 1.0;
+      container.innerHTML = '';
+
+      state.parlaySelections.forEach(item => {
+        totalMultiplier *= item.odds;
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono';
+        row.innerHTML = `
+          <span>${item.player} - <strong>${item.choice} ${item.line} ${item.prop}</strong></span>
+          <span class="text-amber-400 font-bold">${item.odds}x</span>
+        `;
+        container.appendChild(row);
+      });
+
+      document.getElementById('parlay-multiplier').innerText = `Multiplier: ${totalMultiplier.toFixed(2)}x`;
+    }
+
+    function placeSportsBet() {
+      const stake = parseFloat(document.getElementById('sports-bet-amount').value) || 0;
+      if (stake <= 0 || stake > state.cashBalance) {
+        alert('Invalid sports bet stake or insufficient cash balance!');
+        return;
+      }
+
+      if (state.parlaySelections.length === 0) {
+        alert('Select at least 1 Suns player prop to place bet!');
+        return;
+      }
+
+      state.cashBalance -= stake;
+      const mult = state.parlaySelections.reduce((a, b) => a * b.odds, 1.0);
+
+      state.sportsBets.unshift({
+        id: 'bet_' + Date.now(),
+        stake,
+        multiplier: mult,
+        potentialPayout: stake * mult,
+        selections: [...state.parlaySelections]
+      });
+
+      state.parlaySelections = [];
+      playTradeSuccessSound();
+      updateHeaderPortfolioDisplay();
+      renderParlaySlip();
+      alert(`Sports Props Parlay Bet placed successfully! Potential payout: $${(stake * mult).toFixed(2)}`);
+    }
+
+    /* ================= NBA COURT SHOT CHART VISUALIZER ================= */
+    let courtCanvas, courtCtx;
+
+    function initCourtCanvas() {
+      courtCanvas = document.getElementById('sunsCourtCanvas');
+      if (!courtCanvas) return;
+
+      const resize = () => {
+        const rect = courtCanvas.parentElement.getBoundingClientRect();
+        courtCanvas.width = rect.width;
+        courtCanvas.height = rect.height;
+        renderCourtCanvas();
+      };
+      window.addEventListener('resize', resize);
+      resize();
+    }
+
+    function renderCourtCanvas() {
+      if (!courtCanvas) return;
+      courtCtx = courtCanvas.getContext('2d');
+      const w = courtCanvas.width;
+      const h = courtCanvas.height;
+      courtCtx.clearRect(0, 0, w, h);
+
+      // Court lines
+      courtCtx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      courtCtx.lineWidth = 2;
+
+      // Key/Paint
+      const keyW = w * 0.35;
+      const keyH = h * 0.45;
+      const keyX = (w - keyW) / 2;
+      courtCtx.strokeRect(keyX, h - keyH, keyW, keyH);
+
+      // 3-Point Arc
+      courtCtx.beginPath();
+      courtCtx.arc(w / 2, h - 40, w * 0.4, Math.PI * 1.1, Math.PI * 1.9);
+      courtCtx.stroke();
+
+      // Rim
+      courtCtx.beginPath();
+      courtCtx.arc(w / 2, h - 50, 12, 0, Math.PI * 2);
+      courtCtx.strokeStyle = '#f97316';
+      courtCtx.lineWidth = 3;
+      chartCtx.stroke && courtCtx.stroke();
+
+      // Generate random shot markers
+      for (let i = 0; i < 35; i++) {
+        const sx = w * 0.2 + Math.random() * (w * 0.6);
+        const sy = h * 0.15 + Math.random() * (h * 0.7);
+        const isMade = Math.random() > 0.4;
+
+        courtCtx.beginPath();
+        courtCtx.arc(sx, sy, 5, 0, Math.PI * 2);
+        courtCtx.fillStyle = isMade ? '#10b981' : '#ef4444';
+        courtCtx.fill();
+      }
+    }
+
+    function setShotPlayer(playerKey) {
+      state.shotPlayer = playerKey;
+      document.querySelectorAll('.shot-player-btn').forEach(btn => {
+        btn.className = 'shot-player-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white';
+      });
+      const activeBtn = document.getElementById(`btn-shot-${playerKey}`);
+      if (activeBtn) activeBtn.className = 'shot-player-btn px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40';
+
+      const names = { booker: 'Devin Booker #1', durant: 'Kevin Durant #35', beal: 'Bradley Beal #3' };
+      document.getElementById('court-player-name').innerText = names[playerKey] || 'Suns Player';
+      playAudioChime(650, 'sine', 0.05);
+      renderCourtCanvas();
+    }
+
+    /* ================= UTILS ================= */
+    function formatCurrency(val) {
+      if (val < 0.01) {
+        return '$' + val.toFixed(8);
+      }
+      return '$' + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+  </script>
+
+</body>
+</html>
