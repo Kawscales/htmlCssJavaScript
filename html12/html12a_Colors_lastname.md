@@ -17,7 +17,7 @@ Type your answers on the blank line under each **Answer:**. Don't just copy the 
 
 **b.** A classmate says, "Hex has fewer colors than RGB because hex codes use fewer digits." Are they right? Explain using the number of choices for each color.
 
-**Answer:**
+**Answer:** incorrect
 
 
 ## 2. Reading hex codes
@@ -32,9 +32,9 @@ Type your answers on the blank line under each **Answer:**. Don't just copy the 
 | `#CCCCCC` | Cream White |
 | `#1A1A1A` | Light Black |
 
-**d.** In `#c`, which pair is the strongest? What color family will this be?
+**d.** In `#3C9F12`, which pair is the strongest? What color family will this be?
 
-**Answer:** Green 
+**Answer:**  Dark Green 
 
 
 **e.** The CSS color name `lime` and the CSS color name `green` are not the same color. Give the hex code for each.
@@ -48,19 +48,19 @@ Type your answers on the blank line under each **Answer:**. Don't just copy the 
 
 | Given | Write it as |
 |---|---|
-| `rgb(255, 255, 0)` | hex: |
-| `#0000FF` | rgb: |
+| `rgb(255, 255, 0)` | hex: #ffff00|
+| `#0000FF` | rgb: 0,0,255 |
 | `rgb(0, 0, 0)` | hex: #000000|
-| `#FFFFFF` | rgb: |
+| `#FFFFFF` | rgb: 255,255,255 |
 
 **g.** Convert the hex pair `C0` to a normal number. Show your work using the rule in section 1.4 (first digit × 16, plus the second digit). Remember C = 12.
 
-**Answer:**
+**Answer:** 12 x 16 + 0 = 192
 
 
 **h.** `#F80` is short hex. Write it out as a full 6-digit hex code.
 
-**Answer:**
+**Answer:** #FF8800
 
 
 ## 4. Colors in CSS
@@ -70,6 +70,13 @@ Type your answers on the blank line under each **Answer:**. Don't just copy the 
 - Makes the page (`body`) background white
 
 ```css
+h1 {
+  color: #FF0000;
+}
+
+body {
+  background-color: rgb(255, 255, 255);
+}
 
 
 ```
@@ -77,11 +84,12 @@ Type your answers on the blank line under each **Answer:**. Don't just copy the 
 **j.** Write a CSS rule for a class called `.overlay` that makes its background **black and half see-through**. Which number controls the see-through part?
 
 ```css
-
-
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
 ```
 
-**Answer:**
+**Answer:** 
 
 
 **k.** Why is yellow text (`#FFFF00`) on a white background (`#FFFFFF`) a bad choice? What would you change?
@@ -100,8 +108,8 @@ Type your answers on the blank line under each **Answer:**. Don't just copy the 
 
 | Term | Your definition |
 |---|---|
-| RGB | |
-| Hex code | |
-| Hexadecimal | |
-| Additive color | |
-| rgba | |
+| RGB | Red, Green, & Blue |
+| Hex code | Numbers and Letters |
+| Hexadecimal | 16 positional numeral system|
+| Additive color | creating a color by lights|
+| rgba | Red, Green, Blue, & Alpha|
